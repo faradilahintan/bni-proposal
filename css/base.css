@@ -1,0 +1,120 @@
+/* ============================================
+   BASE.CSS — Variables, Reset, Typography
+   Edit :root to change the global theme
+   ============================================ */
+:root {
+  --navy:      #0a2240;
+  --navy2:     #0d2d55;
+  --orange:    #e8461a;
+  --orange2:   #f05a30;
+  --orange-bg: #fff4f1;
+  --teal:      #006b6b;
+  --teal2:     #008b8b;
+  --teal-bg:   #f0fafa;
+  --green:     #2d6a3f;
+  --green-bg:  #f0faf3;
+  --gold:      #b8860b;
+  --bg:        #ffffff;
+  --bg2:       #f5f7fa;
+  --bg3:       #eef1f6;
+  --border:    #dde2ec;
+  --text:      #0a2240;
+  --text2:     #3d5068;
+  --text3:     #7a8fa6;
+  --radius:    12px;
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  color-scheme: light only;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  touch-action: none;
+  color-scheme: light only !important;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── Typography ── */
+.t-eyebrow {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 1.4px; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.t-h1 {
+  font-size: clamp(22px, 4.5vw, 36px);
+  font-weight: 800; line-height: 1.15;
+  color: var(--navy); margin-bottom: 6px;
+}
+.t-h1 .accent { color: var(--orange); }
+.t-sub { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 18px; }
+
+/* ── Tags ── */
+.tag { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
+.tag-o { background: var(--orange-bg); color: var(--orange); }
+.tag-t { background: var(--teal-bg); color: var(--teal); }
+.tag-n { background: var(--bg3); color: var(--navy); }
+.tag-g { background: var(--green-bg); color: var(--green); }
+
+/* ── Highlight boxes ── */
+.hbox { background: var(--orange-bg); border-left: 3px solid var(--orange); border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: var(--navy); line-height: 1.6; }
+.hbox-t { background: var(--teal-bg); border-left-color: var(--teal); }
+.hbox strong { color: var(--orange); font-weight: 800; }
+.hbox-t strong { color: var(--teal); }
+
+/* ── Cards ── */
+.card   { background: white; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px; transition: all .2s; }
+.card:hover { border-color: var(--orange); box-shadow: 0 4px 16px rgba(232,70,26,.08); }
+.card-o { background: var(--orange-bg); border: 1.5px solid rgba(232,70,26,.2); border-radius: var(--radius); padding: 14px; }
+.card-t { background: var(--teal-bg); border: 1.5px solid rgba(0,107,107,.2); border-radius: var(--radius); padding: 14px; }
+.card-n { background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px; }
+
+/* ── Feature rows ── */
+.feat { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 9px; }
+.chk { width: 19px; height: 19px; border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; margin-top: 1px; }
+.chk-o { background: rgba(232,70,26,.12); color: var(--orange); }
+.chk-t { background: rgba(0,107,107,.12); color: var(--teal); }
+.chk-n { background: rgba(10,34,64,.10); color: var(--navy); }
+.chk-g { background: rgba(45,106,63,.12); color: var(--green); }
+.ft { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* ── Syarat list ── */
+.syarat-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text2); line-height: 1.5; }
+.syarat-item:last-child { border: none; }
+.syarat-num { width: 20px; height: 20px; border-radius: 50%; background: var(--navy); color: white; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Table ── */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th { background: var(--navy); color: white; padding: 8px 10px; text-align: left; font-size: 11px; font-weight: 700; }
+.tbl td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+.tbl tr:last-child td { border: none; }
+.tbl tr:nth-child(even) td { background: var(--bg2); }
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 11px 20px; border-radius: 9px; font-family: inherit; font-weight: 800; font-size: 13px; letter-spacing: .3px; border: none; cursor: pointer; transition: all .2s; }
+.btn-o { background: var(--orange); color: white; }
+.btn-o:hover { background: var(--orange2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,70,26,.25); }
+.btn-t { background: var(--teal); color: white; }
+.btn-t:hover { background: var(--teal2); transform: translateY(-1px); }
+.btn-n { background: var(--navy); color: white; }
+.btn-n:hover { background: var(--navy2); transform: translateY(-1px); }
+.btn-full { width: 100%; }
+
+/* ── Grid helpers ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-2 .span2 { grid-column: span 2; }
+
+/* ── Menu items ── */
+.mi { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; cursor: pointer; border: 1.5px solid var(--border); background: white; margin-bottom: 8px; transition: all .2s; }
+.mi:hover { border-color: var(--orange); background: var(--orange-bg); transform: translateX(3px); }
+.mi-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.mi-name { font-weight: 700; font-size: 13px; color: var(--navy); }
+.mi-desc { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.mi-arr { margin-left: auto; font-size: 14px; color: var(--border); transition: color .2s; }
+.mi:hover .mi-arr { color: var(--orange); }

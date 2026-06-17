@@ -1,0 +1,108 @@
+/* ============================================
+   CALC.CSS — Calculator & form styles
+   ============================================ */
+
+.calc-header {
+  padding: 14px 20px 0; flex-shrink: 0;
+  background: white; border-bottom: 1px solid var(--border);
+}
+.calc-body {
+  flex: 1; overflow-y: auto;
+  padding: 16px 20px 72px; background: var(--bg2);
+}
+.calc-body::-webkit-scrollbar { width: 3px; }
+.calc-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Tabs */
+.ctabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.ctab {
+  padding: 7px 13px; border-radius: 7px;
+  font-size: 11px; font-weight: 700;
+  border: 1.5px solid var(--border); color: var(--text2);
+  background: white; cursor: pointer; transition: all .2s;
+}
+.ctab.on { background: var(--orange); border-color: var(--orange); color: white; }
+.ctab:hover:not(.on) { border-color: var(--orange); color: var(--orange); }
+.cpanel { display: none; }
+.cpanel.on { display: block; }
+
+/* Calc shell */
+.calc-shell { display: flex; flex-direction: column; gap: 14px; }
+.ccard {
+  background: white; border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 18px;
+}
+.ccard h4 { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 14px; }
+
+/* Form elements */
+.fg { margin-bottom: 13px; }
+.fl { display: block; font-size: 11px; font-weight: 700; color: var(--text3); margin-bottom: 5px; letter-spacing: .3px; }
+.fi {
+  width: 100%; padding: 9px 12px;
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 8px; color: var(--navy);
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  outline: none; transition: border-color .2s;
+}
+.fi:focus { border-color: var(--orange); background: white; }
+.fi::placeholder { color: var(--text3); font-weight: 400; }
+
+/* Range sliders */
+.fr {
+  width: 100%; -webkit-appearance: none;
+  height: 3px; border-radius: 2px;
+  background: var(--border); outline: none; margin-top: 6px;
+}
+.fr::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--orange);
+  cursor: pointer; box-shadow: 0 2px 6px rgba(232,70,26,.3);
+}
+.rl { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-top: 3px; }
+
+/* Result area */
+.rarea {
+  background: white; border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 16px;
+}
+.rarea h4 { font-size: 11px; font-weight: 800; color: var(--text3); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
+.r-empty { text-align: center; padding: 20px 14px; color: var(--text3); font-size: 12px; }
+.r-rows { display: none; flex-direction: column; gap: 7px; }
+.r-rows.show { display: flex; }
+.r-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 12px; border-radius: 8px; background: var(--bg2);
+}
+.r-row.hl   { background: var(--orange-bg); border: 1.5px solid rgba(232,70,26,.2); }
+.r-row.hl-t { background: var(--teal-bg);   border: 1.5px solid rgba(0,107,107,.2); }
+.r-row.hl-g { background: var(--green-bg);  border: 1.5px solid rgba(45,106,63,.2); }
+.r-label { font-size: 11px; color: var(--text3); font-weight: 500; }
+.r-val   { font-size: 13px; font-weight: 800; color: var(--navy); }
+.r-row.hl   .r-val { color: var(--orange); font-size: 16px; }
+.r-row.hl-t .r-val { color: var(--teal);   font-size: 16px; }
+.r-row.hl-g .r-val { color: var(--green);  font-size: 16px; }
+.r-val.positive { color: var(--green) !important; }
+.r-val.negative { color: var(--orange) !important; }
+.r-note { font-size: 10px; color: var(--text3); line-height: 1.6; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+/* Working capital specific */
+.wc-gauge {
+  margin: 12px 0;
+  background: var(--bg2); border-radius: 8px;
+  padding: 12px 14px;
+}
+.wc-gauge-label { font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 6px; }
+.wc-bar-track { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+.wc-bar-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
+.wc-bar-orange { background: linear-gradient(90deg, var(--orange), var(--orange2)); }
+.wc-bar-green  { background: linear-gradient(90deg, var(--green), #4ade80); }
+.wc-cycle-row { display: flex; gap: 4px; margin-bottom: 10px; }
+.wc-cycle-box {
+  flex: 1; border-radius: 6px; padding: 8px 6px;
+  text-align: center; font-size: 10px; font-weight: 700;
+}
+
+@media (min-width: 680px) {
+  .calc-shell { flex-direction: row; }
+  .ccard, .rarea { flex: 1; }
+}

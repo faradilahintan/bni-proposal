@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="BNI Proposal"/>
+<meta name="theme-color" content="#ffffff"/>
+<link rel="manifest" href="manifest.json"/>
+<title>BNI — Proposal Kerjasama</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/base.css"/>
+<link rel="stylesheet" href="css/deck.css"/>
+<link rel="stylesheet" href="css/calc.css"/>
+</head>
+<body>
+
+<!-- ── CHROME ── -->
+<div id="progress-bar" style="width:0%"></div>
+
+<button id="section-btn" onclick="Menu.toggle()">☰ MENU</button>
+<div id="section-drawer">
+  <div class="sd-label">Navigasi</div>
+  <div class="sdItem" onclick="Deck.goTo(0);Menu.close()"><div class="sdDot" style="background:var(--orange)"></div>Cover</div>
+  <div class="sdItem" onclick="Deck.goTo(1);Menu.close()"><div class="sdDot" style="background:#60a5fa"></div>Ekosistem Produk</div>
+  <div class="sd-divider"></div>
+  <div class="sd-label">Lending</div>
+  <div class="sdItem" onclick="Deck.goTo(2);Menu.close()"><div class="sdDot" style="background:var(--orange)"></div>KMK Rekening Koran</div>
+  <div class="sdItem" onclick="Deck.goTo(3);Menu.close()"><div class="sdDot" style="background:var(--orange)"></div>KMK Plafond & Termloan</div>
+  <div class="sdItem" onclick="Deck.goTo(4);Menu.close()"><div class="sdDot" style="background:var(--orange)"></div>Kredit Investasi</div>
+  <div class="sdItem" onclick="Deck.goTo(5);Menu.close()"><div class="sdDot" style="background:#fb923c"></div>SCF & SPAN</div>
+  <div class="sd-divider"></div>
+  <div class="sd-label">Garansi & Trade</div>
+  <div class="sdItem" onclick="Deck.goTo(6);Menu.close()"><div class="sdDot" style="background:#a78bfa"></div>Bank Garansi</div>
+  <div class="sdItem" onclick="Deck.goTo(7);Menu.close()"><div class="sdDot" style="background:#a78bfa"></div>Plafond GB & Syarat</div>
+  <div class="sdItem" onclick="Deck.goTo(8);Menu.close()"><div class="sdDot" style="background:#34d399"></div>Trade Service</div>
+  <div class="sd-divider"></div>
+  <div class="sd-label">Cash & Payroll</div>
+  <div class="sdItem" onclick="Deck.goTo(9);Menu.close()"><div class="sdDot" style="background:var(--gold)"></div>BNI Direct</div>
+  <div class="sdItem" onclick="Deck.goTo(10);Menu.close()"><div class="sdDot" style="background:#4ade80"></div>Payroll</div>
+  <div class="sd-divider"></div>
+  <div class="sd-label">Tools</div>
+  <div class="sdItem" onclick="Deck.goTo(11);Menu.close()"><div class="sdDot" style="background:var(--orange)"></div>🧮 Kalkulator Kredit</div>
+  <div class="sdItem" onclick="Deck.goTo(12);Menu.close()"><div class="sdDot" style="background:#38bdf8"></div>📊 Working Capital</div>
+  <div class="sdItem" onclick="Deck.goTo(13);Menu.close()"><div class="sdDot" style="background:var(--navy)"></div>Penutup</div>
+</div>
+
+<button id="presenter-btn" onclick="Presenter.toggle()">PRESENTER</button>
+<div id="presenter-bar">
+  <span id="p-label">CATATAN</span>
+  <span id="p-note">—</span>
+</div>
+
+<div id="swipe-hint">
+  <div class="sh-inner">
+    <div class="shi">👆</div>
+    <p>Geser kiri/kanan · Tombol ‹ › · Tekan ☰ untuk lompat</p>
+  </div>
+</div>
+
+<div id="install-banner" onclick="installPWA()">📲 Simpan ke Homescreen</div>
+<div id="update-banner" onclick="location.reload()">🔄 Versi baru tersedia — tap untuk update</div>
+
+<!-- ════════════════════════════════════════
+     SLIDES
+     ════════════════════════════════════════ -->
+<div id="deck">
+
+<!-- ══ SLIDE 0: COVER ══ -->
+<div class="slide active" data-note="Ketik nama & kontakmu. Sebutkan nama klien, ucapkan terima kasih.">
+  <div class="stripe"></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 28px 72px;background:var(--navy);overflow-y:auto;position:relative">
+    <div class="cover-img-bg">
+      <img data-src="https://images.unsplash.com/photo-1555899434-94d1368aa7af?w=900&q=70&auto=format&fit=crop" alt="" aria-hidden="true"/>
+      <div class="img-fallback" style="background:var(--navy)"></div>
+    </div>
+    <div class="cover-content" style="width:100%;display:flex;flex-direction:column;align-items:center">
+
+    <!-- EDIT SINI: ganti dengan <img src="icons/logo-bni.png" style="height:44px;margin-bottom:6px"/> -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <div style="width:44px;height:44px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:white;letter-spacing:-1px">BNI</div>
+      <div style="text-align:left">
+        <div style="font-size:16px;font-weight:900;color:white">BNI</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.3px">PT Bank Negara Indonesia (Persero) Tbk</div>
+      </div>
+    </div>
+
+    <div style="width:44px;height:2px;background:linear-gradient(90deg,var(--orange),rgba(255,255,255,.3));border-radius:2px;margin:14px auto"></div>
+
+    <div style="font-size:10px;font-weight:800;color:var(--orange2);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px">Ecosystem-Product · Proposal Kerjasama</div>
+    <h1 style="font-size:clamp(26px,6vw,42px);font-weight:900;color:white;line-height:1.15;margin-bottom:10px">
+      Solusi Perbankan<br/><span style="color:var(--orange)">untuk Bisnis Anda</span>
+    </h1>
+    <p style="font-size:13px;color:rgba(255,255,255,.6);max-width:340px;margin:0 auto 28px;line-height:1.6">
+      Lending · Bank Garansi · Trade · Cash Management · Payroll
+    </p>
+
+    <!-- RM identity card — diketik langsung sebelum presentasi -->
+    <div style="background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:14px;padding:18px 24px;min-width:270px;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">Relationship Manager</div>
+      <!-- EDIT SINI: placeholder bisa diganti nama default jika mau -->
+      <input id="inp-name"   placeholder="Nama Anda" style="background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,.25);width:100%;font-family:inherit;font-size:15px;font-weight:800;color:white;outline:none;padding:3px 0 5px;margin-bottom:6px" autocomplete="off"/>
+      <input id="inp-phone"  placeholder="No. HP / WhatsApp" style="background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.18);width:100%;font-family:inherit;font-size:12px;color:rgba(255,255,255,.65);outline:none;padding:3px 0 5px;margin-bottom:4px" autocomplete="off"/>
+      <input id="inp-branch"  placeholder="Kantor Cabang / RCC" style="background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.18);width:100%;font-family:inherit;font-size:12px;color:rgba(255,255,255,.65);outline:none;padding:3px 0 5px;margin-bottom:4px" autocomplete="off"/>
+      <input id="inp-wilayah" placeholder="Kantor Wilayah / Kode Wilayah" style="background:transparent;border:none;border-bottom:1px solid transparent;width:100%;font-family:inherit;font-size:12px;color:rgba(255,255,255,.65);outline:none;padding:3px 0" autocomplete="off"/>
+    </div>
+
+    <div style="font-size:11px;color:rgba(255,255,255,.4);animation:swUp 2s infinite">Geser untuk mulai ›</div>
+  </div>
+    </div><!-- end cover-content -->
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 1: EKOSISTEM PRODUK ══ -->
+<div class="slide" data-note="Tanya dulu: 'Kebutuhan perbankan paling mendesak saat ini apa?'">
+  <div class="stripe"></div>
+  <div class="top-bar"><span class="tb-section">Ekosistem Solusi</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:4px">
+      <div style="flex:1">
+        <h2 class="t1">Satu Bank, <span class="accent">Semua Solusi</span></h2>
+        <p class="t-sub">BNI menyediakan ekosistem perbankan lengkap. Pilih produk yang paling relevan untuk bisnis Anda.</p>
+      </div>
+      <div class="img-accent" style="width:110px;min-width:110px;height:130px;margin-top:4px">
+        <img data-src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&q=70&auto=format&fit=crop" alt="Pemilik bisnis" style="border-radius:10px"/>
+        <div class="img-fallback">🏪</div>
+      </div>
+    </div>
+
+    <div onclick="Deck.goTo(2)" class="mi"><div class="mi-icon" style="background:#fff0eb">💼</div><div><div class="mi-name">Lending Product</div><div class="mi-desc">KMK RK · Plafond · Termloan · KI · SCF · SPAN · Xpora</div></div><div class="mi-arr">›</div></div>
+    <div onclick="Deck.goTo(6)" class="mi"><div class="mi-icon" style="background:#f3f0ff">🛡️</div><div><div class="mi-name">Bank Garansi</div><div class="mi-desc">7 jenis garansi · Fasilitas Plafond GB</div></div><div class="mi-arr">›</div></div>
+    <div onclick="Deck.goTo(8)" class="mi"><div class="mi-icon" style="background:var(--teal-bg)">🌐</div><div><div class="mi-name">Trade Service</div><div class="mi-desc">L/C · SKBDN · SBLC · Ekspor/Impor</div></div><div class="mi-arr">›</div></div>
+    <div onclick="Deck.goTo(9)" class="mi"><div class="mi-icon" style="background:#fffbeb">🏦</div><div><div class="mi-name">BNI Direct · Payroll</div><div class="mi-desc">Cash management · Payroll karyawan</div></div><div class="mi-arr">›</div></div>
+    <div onclick="Deck.goTo(12)" class="mi" style="border-color:var(--orange);background:var(--orange-bg)">
+      <div class="mi-icon" style="background:white">📊</div>
+      <div><div class="mi-name" style="color:var(--orange)">Working Capital Calculator</div><div class="mi-desc">Hitung kebutuhan modal kerja dari siklus bisnis</div></div>
+      <div class="mi-arr" style="color:var(--orange)">›</div>
+    </div>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 2: KMK REKENING KORAN ══ -->
+<div class="slide" data-note="KMK RK = bayar BUNGA dari saldo yang ditarik, bukan angsuran penuh. Contoh: plafond Rp 1M tarik Rp 500jt → bunga dari Rp 500jt saja.">
+  <div class="stripe"></div>
+  <div class="top-bar"><span class="tb-section">Lending — Reguler</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <span class="tag tag-o">KMK Revolving</span>
+    <h2 class="t1">KMK <span class="accent">Rekening Koran</span></h2>
+    <p class="t-sub">Fasilitas revolving — bayar bunga hanya dari saldo yang Anda tarik, bukan dari plafond penuh.</p>
+
+    <!-- EDIT SINI: <img src="icons/kmk-diagram.png" style="width:100%;border-radius:10px;margin-bottom:14px"/> -->
+    <div class="hbox">💡 <strong>Cara kerja:</strong> Plafond Rp 1 M, tarik Rp 500 juta → bunga dari Rp 500 juta saja. Bayar balik → bunga langsung turun.</div>
+
+    <div class="img-accent" style="height:110px;margin-bottom:14px">
+      <img data-src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=700&q=65&auto=format&fit=crop" alt="Stok gudang" style="border-radius:10px"/>
+      <div class="img-fallback">📦</div>
+    </div>
+
+    <div class="feat"><div class="chk chk-o">✓</div><div class="ft">Penarikan & penyetoran <strong>berulang (revolving)</strong> kapan saja sesuai kebutuhan</div></div>
+    <div class="feat"><div class="chk chk-o">✓</div><div class="ft">Bunga dihitung hanya dari <strong>outstanding/saldo yang ditarik</strong></div></div>
+    <div class="feat"><div class="chk chk-o">✓</div><div class="ft">Maksimal fasilitas <strong>Rp 10 Miliar</strong> · Reviewable rate ab <strong>10% p.a.</strong></div></div>
+    <div class="feat"><div class="chk chk-o">✓</div><div class="ft">Tenor 1 tahun, dapat diperpanjang · Cocok untuk perdagangan, jasa, industri</div></div>
+    <div class="feat"><div class="chk chk-o">✓</div><div class="ft">Jaringan BNI tersebar di seluruh Indonesia — kemudahan transaksi di mana saja</div></div>
+
+    <div style="margin-top:12px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Syarat Pengajuan</div>
+      <div class="syarat-item"><div class="syarat-num">1</div>Legalitas lengkap (Akta, NPWP, NIB/SIUP, KTP pengurus)</div>
+      <div class="syarat-item"><div class="syarat-num">2</div>Laporan keuangan 2 tahun terakhir (neraca & laba rugi)</div>
+      <div class="syarat-item"><div class="syarat-num">3</div>Rekening koran 6 bulan terakhir</div>
+      <div class="syarat-item"><div class="syarat-num">4</div>Agunan: properti / aset tetap sesuai kebijakan BNI</div>
+    </div>
+    <button class="btn btn-o btn-full" onclick="Deck.goTo(11);setTimeout(()=>CalcTabs.switchTo('rk'),350)">Simulasi Bunga KMK RK →</button>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 3: KMK PLAFOND & TERMLOAN ══ -->
+<div class="slide" data-note="KMK Plafond untuk yang punya kontrak/SPK. Termloan untuk yang mau cicilan tetap. Tanyakan: ada kontrak aktif?">
+  <div class="stripe"></div>
+  <div class="top-bar"><span class="tb-section">Lending — Reguler</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <h2 class="t1">KMK <span class="accent">Plafond & Termloan</span></h2>
+    <p class="t-sub">Dua skema KMK dengan underlying yang jelas — untuk kontraktor & bisnis terstruktur.</p>
+
+    <div class="card-o" style="margin-bottom:12px">
+      <div style="font-size:12px;font-weight:800;color:var(--orange);margin-bottom:5px">KMK PLAFOND</div>
+      <p style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px">Pencairan Berbasis Underlying</p>
+      <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px">Setiap penarikan harus didukung dokumen pekerjaan nyata.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--navy)">SPK</span>
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--navy)">Kontrak</span>
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--navy)">Invoice</span>
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--navy)">Purchase Order</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:12px;font-weight:800;color:var(--navy);margin-bottom:5px">KMK TERMLOAN / AFLOPEND</div>
+      <p style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px">Angsuran Tetap Bulanan</p>
+      <p style="font-size:12px;color:var(--text2);line-height:1.6">Cicilan pokok + bunga setiap bulan. Tenor hingga <strong>8 tahun</strong>. Prediktif & terstruktur.</p>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Syarat Umum</div>
+    <div class="syarat-item"><div class="syarat-num">1</div>Usaha berjalan minimal 2 tahun di bidang sejenis</div>
+    <div class="syarat-item"><div class="syarat-num">2</div>Legalitas lengkap perusahaan & pengurus</div>
+    <div class="syarat-item"><div class="syarat-num">3</div>Laporan keuangan & rekening koran 6–12 bulan terakhir</div>
+    <div class="syarat-item"><div class="syarat-num">4</div>Copy kontrak / SPK aktif (untuk KMK Plafond)</div>
+    <button class="btn btn-o btn-full" style="margin-top:14px" onclick="Deck.goTo(11);setTimeout(()=>CalcTabs.switchTo('kmk'),350)">Simulasi Termloan →</button>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 4: KREDIT INVESTASI ══ -->
+<div class="slide" data-note="KI untuk ekspansi jangka panjang. Tanyakan: rencana beli aset / bangun fasilitas 2-3 tahun ke depan? Grace period cocok untuk proyek konstruksi.">
+  <div class="stripe"></div>
+  <div class="top-bar"><span class="tb-section">Lending — Investasi</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <span class="tag tag-n">Kredit Investasi</span>
+    <h2 class="t1">Kredit <span class="accent">Investasi</span></h2>
+    <p class="t-sub">Pembiayaan jangka menengah–panjang untuk ekspansi, pembelian aset tetap, dan pengembangan kapasitas usaha.</p>
+
+    <div class="hbox">📌 Tenor hingga <strong>10 tahun</strong> · Pembiayaan hingga <strong>80%</strong> nilai investasi · <strong>Grace period</strong> tersedia</div>
+
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft">Pembelian tanah, bangunan, mesin, kendaraan, peralatan produksi</div></div>
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft">Pembangunan gedung / pabrik / renovasi fasilitas</div></div>
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft">Refinancing aset tetap yang sudah ada</div></div>
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft"><strong>Grace period</strong> — bayar bunga saja di masa konstruksi, cicilan pokok mulai setelah proyek jalan</div></div>
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft">Dapat dikombinasikan dengan KMK untuk paket pembiayaan bisnis lengkap</div></div>
+
+    <div style="margin-top:12px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Syarat Pengajuan</div>
+      <div class="syarat-item"><div class="syarat-num">1</div>Studi kelayakan / rencana investasi (business plan)</div>
+      <div class="syarat-item"><div class="syarat-num">2</div>RAB proyek / penawaran vendor / NJOP untuk properti</div>
+      <div class="syarat-item"><div class="syarat-num">3</div>Laporan keuangan 2–3 tahun terakhir</div>
+      <div class="syarat-item"><div class="syarat-num">4</div>Agunan berupa aset yang dibiayai dan/atau aset tambahan</div>
+    </div>
+    <button class="btn btn-n btn-full" onclick="Deck.goTo(11);setTimeout(()=>CalcTabs.switchTo('kmk'),350)">Simulasi Kredit Investasi →</button>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 5: SCF & SPAN ══ -->
+<div class="slide" data-note="SCF butuh relasi anchor/buyer besar. SPAN untuk kontrak pemerintah. Tanya: siapa buyer utama? Ada proyek APBN/APBD?">
+  <div class="stripe"></div>
+  <div class="top-bar"><span class="tb-section">Lending — Skim Khusus</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <h2 class="t1">SCF & <span class="accent">SPAN</span></h2>
+    <p class="t-sub">Pembiayaan berbasis ekosistem bisnis dan anggaran negara — rate kompetitif karena risiko lebih terukur.</p>
+
+    <div class="img-accent" style="height:100px;margin-bottom:12px">
+      <img data-src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=700&q=65&auto=format&fit=crop" alt="Proyek konstruksi" style="border-radius:10px"/>
+      <div class="img-fallback">🏗️</div>
+    </div>
+
+    <div class="card-o" style="margin-bottom:12px">
+      <div style="font-size:12px;font-weight:800;color:var(--orange);margin-bottom:5px">SUPPLY CHAIN FINANCING (SCF)</div>
+      <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px">Pembiayaan berbasis invoice/PO yang sudah disetujui buyer. Dana cair lebih cepat tanpa menunggu jatuh tempo.</p>
+      <!-- EDIT SINI: tambah logo anchor korporat sesuai klien -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--navy)">PLN</span>
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--navy)">Pertamina</span>
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--navy)">PJB</span>
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--navy)">Sinarmas</span>
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--navy)">Telkomsel</span>
+        <span style="background:white;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--navy)">Pelindo</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:12px;font-weight:800;color:var(--navy);margin-bottom:5px">🏛️ SPAN — Proyek APBN/APBD</div>
+      <p style="font-size:12px;color:var(--text2);line-height:1.6">Untuk kontraktor/vendor dengan kontrak pemerintah. <strong>Pelunasan otomatis</strong> dari pencairan kas negara — risiko sangat rendah, rate lebih kompetitif.</p>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Syarat SCF / SPAN</div>
+    <div class="syarat-item"><div class="syarat-num">1</div>Terdaftar sebagai mitra/vendor resmi anchor atau instansi pemerintah</div>
+    <div class="syarat-item"><div class="syarat-num">2</div>Copy kontrak / SPK / PO yang sudah ditandatangani kedua pihak</div>
+    <div class="syarat-item"><div class="syarat-num">3</div>Legalitas lengkap perusahaan · Rekening koran 6 bulan terakhir</div>
+    <button class="btn btn-o btn-full" style="margin-top:14px" onclick="Deck.goTo(11);setTimeout(()=>CalcTabs.switchTo('scf'),350)">Simulasi SCF / SPAN →</button>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 6: BANK GARANSI ══ -->
+<div class="slide" data-note="Key point: jaminan aset tetap, bukan full cash. Tanya: seberapa sering ikut tender? Ada proyek yang butuh BG saat ini?">
+  <div class="stripe stripe-teal"></div>
+  <div class="top-bar"><span class="tb-section tb-section-t">Bank Garansi</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <span class="tag tag-t">7 Jenis Garansi Bank</span>
+    <h2 class="t1"><span style="color:var(--teal)">Bank</span> Garansi</h2>
+    <p class="t-sub">Penerbitan Bank Garansi lebih efisien — jaminan aset tetap tanpa marginal deposit penuh.</p>
+
+    <div class="hbox hbox-t">💡 <strong>Keunggulan:</strong> Cash collateral hanya 50% dari fasilitas plafond GB — bukan 100%</div>
+
+    <div class="grid-2" style="margin-bottom:14px">
+      <div class="card-t"><div style="font-size:10px;font-weight:800;color:var(--teal)">BID BOND</div><div style="font-size:12px;font-weight:700;color:var(--navy);margin-top:3px">Jaminan Penawaran</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Untuk mengikuti tender</div><div style="font-size:12px;font-weight:800;color:var(--teal);margin-top:6px">MD: 0% · Propisi: 1,5%</div></div>
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--teal)">PERFORMANCE BOND</div><div style="font-size:12px;font-weight:700;color:var(--navy);margin-top:3px">Jaminan Pelaksanaan</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Melaksanakan pekerjaan</div><div style="font-size:12px;font-weight:800;color:var(--teal);margin-top:6px">MD: 10% · Propisi: 2%</div></div>
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--teal)">ADVANCE PAYMENT</div><div style="font-size:12px;font-weight:700;color:var(--navy);margin-top:3px">Jaminan Uang Muka</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Uang muka dari Bowheer</div><div style="font-size:12px;font-weight:800;color:var(--teal);margin-top:6px">MD: 20% · Propisi: 2,5%</div></div>
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--teal)">MAINTENANCE BOND</div><div style="font-size:12px;font-weight:700;color:var(--navy);margin-top:3px">Jaminan Pemeliharaan</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Pemeliharaan pekerjaan</div><div style="font-size:12px;font-weight:800;color:var(--teal);margin-top:6px">MD: 5% · Propisi: 2%</div></div>
+      <div class="card span2"><div style="font-size:10px;font-weight:800;color:var(--teal)">KEPABEANAN · PERDAGANGAN · LAINNYA</div><div style="font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5">Jaminan Bea Cukai · Jaminan Perdagangan ke supplier · Jaminan reklamasi, keagenan, dan lainnya</div></div>
+    </div>
+    <div style="text-align:right;margin-bottom:10px"><span style="font-size:11px;color:var(--text3)">Biaya Administrasi per penerbitan: <strong style="color:var(--navy)">Rp 500.000</strong></span></div>
+    <button class="btn btn-t btn-full" onclick="Deck.goTo(11);setTimeout(()=>CalcTabs.switchTo('bg'),350)">Simulasi Bank Garansi →</button>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 7: PLAFOND GB & SYARAT ══ -->
+<div class="slide" data-note="Highlight: cash collateral HANYA 50% dari plafond GB. Propisi negotiable per triwulan. Klien yang sering terbitkan BG akan sangat diuntungkan.">
+  <div class="stripe stripe-teal"></div>
+  <div class="top-bar"><span class="tb-section tb-section-t">Fasilitas Plafond Bank Garansi</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <h2 class="t1"><span style="color:var(--teal)">Plafond</span> Bank Garansi</h2>
+    <p class="t-sub">Penerbitan GB lebih mudah & efisien — marginal deposit rendah, cash flow tetap optimal.</p>
+
+    <div style="background:white;border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:800;color:var(--navy);margin-bottom:10px">Tabel Rate Plafond GB</div>
+      <table class="tbl">
+        <tr><th>Jenis GB</th><th>MD</th><th>Propisi p.a.</th><th>Adm.</th></tr>
+        <tr><td>Tender (Bid Bond)</td><td style="color:var(--green);font-weight:700">0%</td><td>1,50%</td><td rowspan="4" style="text-align:center;font-weight:700;vertical-align:middle">Rp 500rb</td></tr>
+        <tr><td>Uang Muka</td><td>20%</td><td>2,50%</td></tr>
+        <tr><td>Pelaksanaan</td><td>10%</td><td>2,00%</td></tr>
+        <tr><td>Pemeliharaan</td><td>5%</td><td>2,00%</td></tr>
+      </table>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Syarat Pengajuan Fasilitas Plafond GB</div>
+    <div class="syarat-item"><div class="syarat-num">1</div>Pengalaman usaha minimal <strong>3 tahun</strong> di bidang sejenis</div>
+    <div class="syarat-item"><div class="syarat-num">2</div>Nasabah BNI minimal <strong>2 tahun</strong></div>
+    <div class="syarat-item"><div class="syarat-num">3</div>Tidak termasuk DHN · Kredit lancar 2 tahun terakhir</div>
+    <div class="syarat-item"><div class="syarat-num">4</div>Tidak ada historis klaim atas BG yang diterbitkan di BNI</div>
+    <div class="syarat-item"><div class="syarat-num">5</div>Cash collateral <strong>35–50%</strong> dari maksimum plafond + biaya administrasi 0,1% p.a.</div>
+    <div class="syarat-item"><div class="syarat-num">6</div>Laporan keuangan 4 periode · Rekening koran 12 bulan · Company profile · Summary kontrak</div>
+    <button class="btn btn-t btn-full" style="margin-top:14px" onclick="Deck.goTo(11);setTimeout(()=>CalcTabs.switchTo('bg'),350)">Simulasi Bank Garansi →</button>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 8: TRADE SERVICE ══ -->
+<div class="slide" data-note="Cocok untuk klien ekspor/impor. BNI punya 8 overseas branches — keunggulan nyata vs bank swasta. Tanya: ada transaksi lintas negara?">
+  <div class="stripe stripe-green"></div>
+  <div class="top-bar"><span class="tb-section tb-section-g">Trade Business</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <span class="tag tag-g">8 Overseas Branches</span>
+    <h2 class="t1">Trade <span style="color:var(--green)">Service</span></h2>
+    <p class="t-sub">Solusi ekspor-impor lengkap — L/C, SKBDN, SBLC, dan pembiayaan perdagangan internasional.</p>
+    <div class="grid-2" style="margin-bottom:12px">
+      <div class="card-n">
+        <div style="font-size:11px;font-weight:800;color:var(--navy);margin-bottom:8px">🚢 IMPORT</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">L/C's Issuing</div>
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">L/C's Amendment</div>
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">L/C's Realization</div>
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">L/C's Refinancing</div>
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">Non-L/C Inward Collection</div>
+        </div>
+      </div>
+      <div class="card-n">
+        <div style="font-size:11px;font-weight:800;color:var(--navy);margin-bottom:8px">✈️ EXPORT</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">L/C's Advising & Transfer</div>
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">Export's Draft Negotiation</div>
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">Export's Discounting</div>
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">Bill Collection Financing</div>
+          <div style="font-size:11px;color:var(--text2);padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">SBLC · SKBDN</div>
+        </div>
+      </div>
+    </div>
+    <div class="feat"><div class="chk chk-g">✓</div><div class="ft"><em>Same-day service</em> L/C · Trade Advisory Officer expert</div></div>
+    <div class="feat"><div class="chk chk-g">✓</div><div class="ft">EBCS — pengiriman dokumen via kurir internasional terkemuka</div></div>
+    <div class="feat"><div class="chk chk-g">✓</div><div class="ft">Worldwide acceptance · 8 overseas branches · Refinancing L/C kompetitif</div></div>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 9: BNI DIRECT ══ -->
+<div class="slide" data-note="Paling relevan untuk perusahaan dengan banyak transaksi: gaji, pajak, vendor. Tanya: berapa transaksi transfer/payroll per bulan?">
+  <div class="stripe stripe-gold"></div>
+  <div class="top-bar"><span class="tb-section" style="color:var(--gold)">Cash Management</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <h2 class="t1"><span style="color:var(--gold)">BNI</span> Direct</h2>
+    <p class="t-sub">Platform corporate internet banking 24/7 — transactions, automation, audit & reporting. Integrasi ERP tersedia.</p>
+
+    <div class="img-accent" style="height:100px;margin-bottom:12px">
+      <img data-src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=700&q=65&auto=format&fit=crop" alt="Dashboard analytics" style="border-radius:10px"/>
+      <div class="img-fallback">💻</div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:12px">
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--gold);margin-bottom:5px">COLLECTION</div><div style="font-size:11px;color:var(--text2);line-height:1.65">Virtual Account · eCollection · Auto Debit · Cash Pickup · E-Transfer</div></div>
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--gold);margin-bottom:5px">LIQUIDITY</div><div style="font-size:11px;color:var(--text2);line-height:1.65">Cash Pooling · Distribution · Range Balance · DEPO SWAP · Notional Pooling</div></div>
+      <div class="card span2"><div style="font-size:10px;font-weight:800;color:var(--gold);margin-bottom:5px">PAYMENT</div><div style="font-size:11px;color:var(--text2);line-height:1.65">E-Tax · E-Tax Kepabeanan · Payroll · BNI POPS · GB Online · L/C · FSCM · ERP Integration (SAP, Oracle, SUN) · Autopay</div></div>
+    </div>
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft">Multilayered security · <strong>9 level otorisasi</strong> — maker, approver, releaser</div></div>
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft">VA Report D+1 encrypted Excel · Account statement real-time</div></div>
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft">Audit trail setiap transaksi · Duplicate transaction prevention</div></div>
+    <div class="feat"><div class="chk chk-n">✓</div><div class="ft">ERP Integration — SAP, Oracle, SUN (format & enkripsi custom)</div></div>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 10: PAYROLL ══ -->
+<div class="slide" data-note="Payroll = pintu masuk termudah. Hampir semua perusahaan butuh. Tekankan kartu 3-in-1 dan benefit karyawan.">
+  <div class="stripe stripe-green"></div>
+  <div class="top-bar"><span class="tb-section tb-section-g">Payroll</span><span class="tb-logo">B<span>N</span>I</span></div>
+  <div class="pad">
+    <span class="tag tag-g">BNI Payroll</span>
+    <h2 class="t1">Benefit <span style="color:var(--green)">BNI Payroll</span></h2>
+    <p class="t-sub">Lebih dari sekadar transfer gaji — ekosistem benefit karyawan yang lengkap dan menguntungkan perusahaan.</p>
+    <div class="grid-2">
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--green);margin-bottom:5px">KARTU MULTI FUNGSI</div><div style="font-size:12px;color:var(--text2);line-height:1.6">3-in-1: Debit + Prepaid + ID Pegawai. Jaringan Mastercard internasional.</div></div>
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--green);margin-bottom:5px">BIAYA LEBIH RENDAH</div><div style="font-size:12px;color:var(--text2);line-height:1.6">Biaya tabungan bulanan lebih murah, fitur sama dengan tabungan reguler.</div></div>
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--green);margin-bottom:5px">KPR BNI GRIYA</div><div style="font-size:12px;color:var(--text2);line-height:1.6">Suku bunga rendah, proses simpel, Take Over & Top-Up KPR tersedia.</div></div>
+      <div class="card"><div style="font-size:10px;font-weight:800;color:var(--green);margin-bottom:5px">KTA BNI FLEKSI</div><div style="font-size:12px;color:var(--text2);line-height:1.6">Bunga khusus karyawan, via ATM/digital, Takeover & Top-Up, bebas biaya.</div></div>
+      <div class="card span2"><div style="font-size:10px;font-weight:800;color:var(--green);margin-bottom:5px">LOYALTY PAYROLL PROGRAM</div><div style="font-size:12px;color:var(--text2);line-height:1.6">Hadiah undian: Mobil · Motor · HP. Bundling: Kartu Kredit Garuda Miles · Taplus Anak · TAPENAS. Promo & cashback via EDC BNI.</div></div>
+    </div>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+<!-- ══ SLIDE 11: KALKULATOR KREDIT ══ -->
+<div class="slide" data-note="MOMEN KRUSIAL — masukkan angka real klien. Efek ini lebih kuat dari brosur manapun!">
+  <div class="stripe"></div>
+  <div class="calc-header">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--navy)">🧮 Kalkulator Kredit</h2>
+      <span style="font-size:10px;color:var(--text3)">Angka bersifat estimasi</span>
+    </div>
+    <div class="ctabs">
+      <button class="ctab on"  onclick="CalcTabs.switchTo('rk')">KMK RK</button>
+      <button class="ctab"     onclick="CalcTabs.switchTo('kmk')">TL / KI</button>
+      <button class="ctab"     onclick="CalcTabs.switchTo('scf')">SCF / SPAN</button>
+      <button class="ctab"     onclick="CalcTabs.switchTo('bg')">Bank Garansi</button>
+      <button class="ctab"     onclick="CalcTabs.switchTo('ccc')">CCC</button>
+    </div>
+  </div>
+  <div class="calc-body">
+
+    <!-- KMK RK -->
+    <div class="cpanel on" id="cp-rk">
+      <div class="calc-shell">
+        <div class="ccard">
+          <h4>💼 KMK Rekening Koran</h4>
+          <div style="background:var(--orange-bg);border:1.5px solid rgba(232,70,26,.2);border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:11px;color:var(--text2);line-height:1.5">ℹ️ Bayar <strong>bunga dari saldo yang ditarik</strong> — bukan dari plafond penuh.</div>
+          <div class="fg"><label class="fl">Plafond Fasilitas (Rp)</label><input type="number" class="fi" id="rk-plafond" value="1000000000"/></div>
+          <div class="fg"><label class="fl">Saldo yang Ditarik (Rp)</label><input type="number" class="fi" id="rk-tarik" value="500000000"/></div>
+          <div class="fg"><label class="fl">Suku Bunga/Tahun: <strong id="rk-rv" style="color:var(--orange)">10</strong>%</label><input type="range" class="fr" id="rk-r" min="7" max="18" step="0.5" value="10" oninput="document.getElementById('rk-rv').textContent=this.value"/><div class="rl"><span>7%</span><span>18%</span></div></div>
+          <button class="btn btn-o btn-full" onclick="calcRK()">Hitung Bunga</button>
+        </div>
+        <div class="rarea">
+          <h4>Hasil Simulasi</h4>
+          <div class="r-empty" id="rk-e">Tekan "Hitung Bunga"</div>
+          <div class="r-rows" id="rk-res">
+            <div class="r-row hl"><span class="r-label">Bunga / Bulan (saldo ditarik)</span><span class="r-val" id="rk-m">—</span></div>
+            <div class="r-row"><span class="r-label">Bunga jika tarik penuh</span><span class="r-val" id="rk-full">—</span></div>
+            <div class="r-row"><span class="r-label">Bunga Harian</span><span class="r-val" id="rk-daily">—</span></div>
+            <div class="r-row"><span class="r-label">Penghematan vs Tarik Penuh</span><span class="r-val" id="rk-eff">—</span></div>
+            <p class="r-note">*Bayar balik lebih awal = bunga langsung turun. Tidak ada penalti pelunasan awal.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KMK TL / KI -->
+    <div class="cpanel" id="cp-kmk">
+      <div class="calc-shell">
+        <div class="ccard">
+          <h4>📊 KMK Termloan / Kredit Investasi</h4>
+          <div class="fg"><label class="fl">Jumlah Pinjaman (Rp)</label><input type="number" class="fi" id="kmk-a" value="500000000"/></div>
+          <div class="fg"><label class="fl">Suku Bunga/Tahun: <strong id="kmk-rv" style="color:var(--orange)">10</strong>%</label><input type="range" class="fr" id="kmk-r" min="7" max="18" step="0.5" value="10" oninput="document.getElementById('kmk-rv').textContent=this.value"/><div class="rl"><span>7%</span><span>18%</span></div></div>
+          <div class="fg"><label class="fl">Tenor: <strong id="kmk-tv" style="color:var(--orange)">36</strong> bulan</label><input type="range" class="fr" id="kmk-t" min="1" max="120" value="36" oninput="document.getElementById('kmk-tv').textContent=this.value"/><div class="rl"><span>1 bln</span><span>120 bln</span></div></div>
+          <div class="fg"><label class="fl">Grace Period: <strong id="kmk-gv" style="color:var(--orange)">0</strong> bulan</label><input type="range" class="fr" id="kmk-g" min="0" max="24" step="3" value="0" oninput="document.getElementById('kmk-gv').textContent=this.value"/><div class="rl"><span>0</span><span>24 bln</span></div></div>
+          <button class="btn btn-o btn-full" onclick="calcKMK()">Hitung Angsuran</button>
+        </div>
+        <div class="rarea">
+          <h4>Hasil Simulasi</h4>
+          <div class="r-empty" id="kmk-e">Tekan "Hitung"</div>
+          <div class="r-rows" id="kmk-res">
+            <div class="r-row hl"><span class="r-label">Angsuran / Bulan</span><span class="r-val" id="kmk-m">—</span></div>
+            <div class="r-row"><span class="r-label">Bayar saat Grace Period / bln</span><span class="r-val" id="kmk-gp">—</span></div>
+            <div class="r-row"><span class="r-label">Total Bunga</span><span class="r-val" id="kmk-i">—</span></div>
+            <div class="r-row"><span class="r-label">Total Pembayaran</span><span class="r-val" id="kmk-tot">—</span></div>
+            <p class="r-note">*Simulasi anuitas. Rate final per kebijakan bank.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCF / SPAN -->
+    <div class="cpanel" id="cp-scf">
+      <div class="calc-shell">
+        <div class="ccard">
+          <h4>🔗 SCF / SPAN</h4>
+          <div class="fg"><label class="fl">Nilai Kontrak / Invoice (Rp)</label><input type="number" class="fi" id="scf-a" value="2000000000"/></div>
+          <div class="fg"><label class="fl">% Pembiayaan: <strong id="scf-pv" style="color:var(--orange)">80</strong>%</label><input type="range" class="fr" id="scf-p" min="60" max="95" step="5" value="80" oninput="document.getElementById('scf-pv').textContent=this.value"/><div class="rl"><span>60%</span><span>95%</span></div></div>
+          <div class="fg"><label class="fl">Suku Bunga/Tahun: <strong id="scf-rv" style="color:var(--orange)">9</strong>%</label><input type="range" class="fr" id="scf-r" min="6" max="16" step="0.5" value="9" oninput="document.getElementById('scf-rv').textContent=this.value"/><div class="rl"><span>6%</span><span>16%</span></div></div>
+          <div class="fg"><label class="fl">Tenor: <strong id="scf-tv" style="color:var(--orange)">90</strong> hari</label><input type="range" class="fr" id="scf-t" min="30" max="365" step="30" value="90" oninput="document.getElementById('scf-tv').textContent=this.value"/><div class="rl"><span>30hr</span><span>365hr</span></div></div>
+          <button class="btn btn-o btn-full" onclick="calcSCF()">Hitung</button>
+        </div>
+        <div class="rarea">
+          <h4>Hasil Simulasi</h4>
+          <div class="r-empty" id="scf-e">Tekan "Hitung"</div>
+          <div class="r-rows" id="scf-res">
+            <div class="r-row hl"><span class="r-label">Dana Diterima Sekarang</span><span class="r-val" id="scf-d">—</span></div>
+            <div class="r-row"><span class="r-label">Biaya Bunga (tenor)</span><span class="r-val" id="scf-c">—</span></div>
+            <div class="r-row"><span class="r-label">Nilai Kontrak Penuh</span><span class="r-val" id="scf-f">—</span></div>
+            <div class="r-row"><span class="r-label">Est. Laba Bersih (margin 15%)</span><span class="r-val" id="scf-n">—</span></div>
+            <p class="r-note">*SPAN: pelunasan otomatis dari APBN/APBD.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANK GARANSI -->
+    <div class="cpanel" id="cp-bg">
+      <div class="calc-shell">
+        <div class="ccard">
+          <h4>🛡️ Bank Garansi</h4>
+          <div class="fg"><label class="fl">Nilai Bank Garansi (Rp)</label><input type="number" class="fi" id="bg-a" value="1500000000"/></div>
+          <div class="fg"><label class="fl">Jenis GB</label>
+            <select class="fi" id="bg-type" onchange="updateMD()">
+              <option value="0,1.5">Bid Bond (Tender) — MD 0%</option>
+              <option value="10,2.0" selected>Performance Bond — MD 10%</option>
+              <option value="20,2.5">Advance Payment Bond — MD 20%</option>
+              <option value="5,2.0">Maintenance Bond — MD 5%</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl">Propisi p.a.: <strong id="bg-prv" style="color:var(--orange)">2.0</strong>% <span style="font-weight:400;color:var(--text3)">(negotiable)</span></label><input type="range" class="fr" id="bg-pr" min="1" max="3" step="0.25" value="2.0" oninput="document.getElementById('bg-prv').textContent=this.value"/><div class="rl"><span>1%</span><span>3%</span></div></div>
+          <div class="fg"><label class="fl">Jangka Waktu: <strong id="bg-tv" style="color:var(--orange)">6</strong> bulan</label><input type="range" class="fr" id="bg-t" min="1" max="24" value="6" oninput="document.getElementById('bg-tv').textContent=this.value"/><div class="rl"><span>1 bln</span><span>24 bln</span></div></div>
+          <button class="btn btn-t btn-full" onclick="calcBG()">Hitung Biaya GB</button>
+        </div>
+        <div class="rarea">
+          <h4>Hasil Simulasi</h4>
+          <div class="r-empty" id="bg-e">Tekan "Hitung"</div>
+          <div class="r-rows" id="bg-res">
+            <div class="r-row hl-t"><span class="r-label">Marginal Deposit (diblokir)</span><span class="r-val" id="bg-md">—</span></div>
+            <div class="r-row"><span class="r-label">Biaya Propisi / triwulan</span><span class="r-val" id="bg-pr2">—</span></div>
+            <div class="r-row"><span class="r-label">Total Propisi (tenor penuh)</span><span class="r-val" id="bg-tpr">—</span></div>
+            <div class="r-row"><span class="r-label">Biaya Administrasi</span><span class="r-val">Rp 500.000</span></div>
+            <div class="r-row" style="background:var(--bg3)"><span class="r-label" style="font-weight:700;color:var(--navy)">Total Biaya Penerbitan</span><span class="r-val" id="bg-tot">—</span></div>
+            <p class="r-note">*MD diblokir hingga GB selesai. Propisi negotiable per triwulan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASH COLLATERAL -->
+    <div class="cpanel" id="cp-ccc">
+      <div class="calc-shell">
+        <div class="ccard">
+          <h4>🔒 Cash Collateral Credit</h4>
+          <div class="fg"><label class="fl">Nilai Deposito (Rp)</label><input type="number" class="fi" id="ccc-d" value="1000000000"/></div>
+          <div class="fg"><label class="fl">% Plafond dari Deposito: <strong id="ccc-pv" style="color:var(--orange)">90</strong>%</label><input type="range" class="fr" id="ccc-p" min="70" max="95" step="5" value="90" oninput="document.getElementById('ccc-pv').textContent=this.value"/><div class="rl"><span>70%</span><span>95%</span></div></div>
+          <div class="fg"><label class="fl">Bunga Kredit/Thn: <strong id="ccc-rv" style="color:var(--orange)">8</strong>%</label><input type="range" class="fr" id="ccc-r" min="5" max="14" step="0.5" value="8" oninput="document.getElementById('ccc-rv').textContent=this.value"/><div class="rl"><span>5%</span><span>14%</span></div></div>
+          <div class="fg"><label class="fl">Bunga Deposito/Thn: <strong id="ccc-drv" style="color:var(--orange)">5</strong>%</label><input type="range" class="fr" id="ccc-dr" min="3" max="8" step="0.25" value="5" oninput="document.getElementById('ccc-drv').textContent=this.value"/><div class="rl"><span>3%</span><span>8%</span></div></div>
+          <button class="btn btn-o btn-full" onclick="calcCCC()">Hitung</button>
+        </div>
+        <div class="rarea">
+          <h4>Hasil Simulasi</h4>
+          <div class="r-empty" id="ccc-e">Tekan "Hitung"</div>
+          <div class="r-rows" id="ccc-res">
+            <div class="r-row hl"><span class="r-label">Plafond Kredit Tersedia</span><span class="r-val" id="ccc-pl">—</span></div>
+            <div class="r-row"><span class="r-label">Bunga Kredit / bulan</span><span class="r-val" id="ccc-mi">—</span></div>
+            <div class="r-row"><span class="r-label">Pendapatan Deposito / bulan</span><span class="r-val" id="ccc-di">—</span></div>
+            <div class="r-row"><span class="r-label">Biaya Bersih / bulan</span><span class="r-val" id="ccc-net">—</span></div>
+            <p class="r-note">*Deposito tetap aktif & berbunga selama kredit berjalan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end calc-body -->
+</div>
+
+<!-- ══ SLIDE 12: WORKING CAPITAL CALCULATOR ══ -->
+<div class="slide" data-note="Gunakan ini di AWAL pertemuan — sebelum presentasi produk. Bantu klien menyadari GAP modal kerja mereka sendiri. Itu lebih powerful dari pitch manapun.">
+  <div class="stripe"></div>
+  <div class="calc-header">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--navy)">📊 Working Capital Calculator</h2>
+    </div>
+    <p style="font-size:11px;color:var(--text3);margin-bottom:10px">Hitung kebutuhan modal kerja dari siklus bisnis klien — Cash Conversion Cycle</p>
+  </div>
+  <div class="calc-body">
+    <div class="calc-shell">
+      <div class="ccard">
+        <h4>Data Operasional Bisnis</h4>
+
+        <div class="fg">
+          <label class="fl">Omzet / Penjualan per Bulan (Rp)</label>
+          <input type="number" class="fi" id="wc-sales" value="500000000" placeholder="500000000"/>
+        </div>
+        <div class="fg">
+          <label class="fl">Margin Keuntungan Kotor: <strong id="wc-mv" style="color:var(--orange)">30</strong>%</label>
+          <input type="range" class="fr" id="wc-margin" min="5" max="80" value="30" oninput="document.getElementById('wc-mv').textContent=this.value"/>
+          <div class="rl"><span>5%</span><span>80%</span></div>
+        </div>
+
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin:12px 0 8px">Siklus Kas (hari rata-rata)</div>
+
+        <div class="fg">
+          <label class="fl">📦 Hari Stok / Inventory: <strong id="wc-iv" style="color:var(--orange)">30</strong> hari</label>
+          <input type="range" class="fr" id="wc-inv" min="0" max="120" value="30" oninput="document.getElementById('wc-iv').textContent=this.value"/>
+          <div class="rl"><span>0</span><span>120 hari</span></div>
+        </div>
+        <div class="fg">
+          <label class="fl">📋 Hari Piutang / Receivable: <strong id="wc-rv2" style="color:var(--orange)">45</strong> hari</label>
+          <input type="range" class="fr" id="wc-rec" min="0" max="120" value="45" oninput="document.getElementById('wc-rv2').textContent=this.value"/>
+          <div class="rl"><span>0</span><span>120 hari</span></div>
+        </div>
+        <div class="fg">
+          <label class="fl">🏦 Hari Hutang / Payable: <strong id="wc-pv" style="color:var(--green)">15</strong> hari</label>
+          <input type="range" class="fr" id="wc-pay" min="0" max="90" value="15" oninput="document.getElementById('wc-pv').textContent=this.value"/>
+          <div class="rl"><span>0</span><span>90 hari</span></div>
+        </div>
+
+        <button class="btn btn-o btn-full" onclick="calcWC()">Hitung Kebutuhan Modal</button>
+      </div>
+
+      <div class="rarea">
+        <h4>Hasil Analisis</h4>
+        <div class="r-empty" id="wc-e">Isi data operasional dan tekan "Hitung"</div>
+        <div class="r-rows" id="wc-res">
+
+          <!-- Cycle bar visual -->
+          <div id="wc-cycle-bar" style="margin-bottom:8px"></div>
+
+          <div class="r-row"><span class="r-label">Operating Cycle</span><span class="r-val" id="wc-op-cycle">—</span></div>
+          <div class="r-row"><span class="r-label">Cash Conversion Cycle</span><span class="r-val" id="wc-cash-cycle">—</span></div>
+
+          <div style="height:1px;background:var(--border);margin:4px 0"></div>
+
+          <div class="r-row"><span class="r-label">Kebutuhan Modal Inventory</span><span class="r-val" id="wc-inv-need">—</span></div>
+          <div class="r-row"><span class="r-label">Kebutuhan Modal Piutang</span><span class="r-val" id="wc-rec-need">—</span></div>
+          <div class="r-row"><span class="r-label">Dikurangi Hutang Dagang</span><span class="r-val" id="wc-pay-delay" style="color:var(--green)">—</span></div>
+
+          <div style="height:1px;background:var(--border);margin:4px 0"></div>
+
+          <div class="r-row"><span class="r-label" style="font-weight:700">Gap Modal Kerja</span><span class="r-val" id="wc-gap">—</span></div>
+          <div class="r-row hl"><span class="r-label">Rekomendasi Plafond KMK</span><span class="r-val" id="wc-recommend">—</span></div>
+
+          <p class="r-note">*Plafond rekomendasi = gap modal + 15% buffer. Cocok untuk pengajuan KMK RK atau KMK Termloan.</p>
+
+          <button class="btn btn-o btn-full" style="margin-top:8px" onclick="Deck.goTo(11);setTimeout(()=>CalcTabs.switchTo('rk'),350)">Lihat Simulasi KMK →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 13: CLOSING ══ -->
+<div class="slide" data-note="Tutup: 'Dari yang kita bahas, solusi mana yang paling relevan?' Lalu DIAM — biarkan klien yang bicara.">
+  <div class="stripe"></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 28px 72px;background:white;overflow-y:auto">
+    <div class="img-accent" style="height:120px;width:180px;margin-bottom:16px;border-radius:14px;overflow:hidden">
+      <img data-src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&q=70&auto=format&fit=crop" alt="Pertemuan bisnis" style="border-radius:14px"/>
+      <div class="img-fallback">🤝</div>
+    </div>
+    <div style="font-size:10px;font-weight:800;color:var(--orange);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px">Langkah Selanjutnya</div>
+    <h2 style="font-size:clamp(24px,5vw,36px);font-weight:900;color:var(--navy);line-height:1.2;margin-bottom:10px">
+      Mari Mulai<br/><span style="color:var(--orange)">Langkah Pertama</span>
+    </h2>
+    <p style="font-size:13px;color:var(--text2);max-width:320px;margin:0 auto 24px;line-height:1.65">
+      Tidak ada kewajiban — hanya diskusi tentang bagaimana BNI dapat mendukung bisnis Anda secara optimal.
+    </p>
+    <div style="width:100%;max-width:320px;margin-bottom:20px">
+      <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:16px;text-align:left">
+        <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Hubungi Saya</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:16px">👤</span>
+          <div><div style="font-size:10px;color:var(--text3)">Relationship Manager</div><div style="font-size:14px;font-weight:800;color:var(--navy)" id="cl-name">—</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:16px">📱</span>
+          <div><div style="font-size:10px;color:var(--text3)">WhatsApp / Telepon</div><div style="font-size:13px;font-weight:600;color:var(--navy)" id="cl-phone">—</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:16px">🏦</span>
+          <div><div style="font-size:10px;color:var(--text3)">Kantor Cabang</div><div style="font-size:13px;font-weight:600;color:var(--navy)" id="cl-branch">—</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+          <span style="font-size:16px">📍</span>
+          <div><div style="font-size:10px;color:var(--text3)">Kantor Wilayah</div><div style="font-size:13px;font-weight:600;color:var(--navy)" id="cl-wilayah">—</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text3)">PT Bank Negara Indonesia (Persero) Tbk · BUMN Untuk Indonesia</div>
+  </div>
+  <div class="slide-footer"></div>
+</div>
+
+</div><!-- end #deck -->
+
+<!-- NAV -->
+<div id="nav-dots"></div>
+<div id="nav-arrows">
+  <button class="arrow-btn" id="btn-share" onclick="Share.openPanel()" title="Kirim ke Klien" style="font-size:14px">📤</button>
+  <button class="arrow-btn" id="btn-prev" onclick="Deck.prev()" disabled>‹</button>
+  <button class="arrow-btn" id="btn-next" onclick="Deck.next()">›</button>
+</div>
+<div id="slide-counter"></div>
+
+<!-- SCRIPTS — load order matters -->
+<script src="js/config.js"></script>
+<script src="js/deck.js"></script>
+<script src="js/calc.js"></script>
+<script src="js/share.js"></script>
+<script>
+// ── BOOT ──
+(async () => {
+  await Config.load();
+  Logos.inject();       // compliance logos into every top-bar
+  LazyImages.init();    // start loading images for slide 0
+  Deck.init();
+  Menu.init();
+  FontScale.buildUI();  // font size control A− / A+
+
+  // Wire cover inputs → live sync to footers + closing slide
+  ['inp-name','inp-phone','inp-branch','inp-wilayah'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => Config.syncClosing());
+  });
+  Config.syncClosing(); // initial sync on load
+
+  // Swipe hint auto-dismiss
+  setTimeout(() => {
+    const h = document.getElementById('swipe-hint');
+    if (h) h.style.display = 'none';
+  }, 3200);
+
+  // PWA install prompt
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('install-banner').style.display = 'block';
+  });
+  window.installPWA = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    document.getElementById('install-banner').style.display = 'none';
+    deferredPrompt = null;
+  };
+
+  // Service worker registration + update notification
+  if ('serviceWorker' in navigator) {
+    const reg = await navigator.serviceWorker.register('./sw.js').catch(() => null);
+    if (reg) {
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            document.getElementById('update-banner').style.display = 'block';
+          }
+        });
+      });
+    }
+    // Listen for SW messages
+    navigator.serviceWorker.addEventListener('message', msg => {
+      if (msg.data?.type === 'UPDATE_AVAILABLE') {
+        document.getElementById('update-banner').style.display = 'block';
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

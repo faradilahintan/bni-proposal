@@ -4,7 +4,7 @@
    Old caches are auto-deleted on activate.
    ============================================ */
 
-const CACHE_VERSION = 'bni-proposal-v1.7.0';
+const CACHE_VERSION = 'bni-proposal-v1.8.0';
 const ASSETS = [
   './',
   './index.html',

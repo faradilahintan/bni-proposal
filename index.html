@@ -44,6 +44,28 @@
   <div class="sdItem" onclick="Deck.goTo(11);Menu.close()"><div class="sdDot" style="background:var(--orange)"></div>🧮 Kalkulator Kredit</div>
   <div class="sdItem" onclick="Deck.goTo(12);Menu.close()"><div class="sdDot" style="background:#38bdf8"></div>📊 Working Capital</div>
   <div class="sdItem" onclick="Deck.goTo(13);Menu.close()"><div class="sdDot" style="background:var(--navy)"></div>Penutup</div>
+  <div class="sd-divider"></div>
+  <div class="sd-label">Setelah Meeting</div>
+  <div class="sdItem" onclick="SimHistory.openPanel();Menu.close()" style="justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="sdDot" style="background:var(--orange)"></div>📋 Riwayat Simulasi
+    </div>
+    <span id="sim-history-badge" style="display:none;background:var(--orange);color:white;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center"></span>
+  </div>
+  <div class="sdItem" onclick="Meeting.openPanel();Menu.close()"><div class="sdDot" style="background:var(--green)"></div>📝 Ringkasan Pertemuan</div>
+  <div class="sdItem" onclick="Session.resetForNewClient();Menu.close()" style="color:var(--orange)"><div class="sdDot" style="background:var(--orange)"></div>🔄 Klien Baru / Reset Sesi</div>
+  <div class="sd-divider"></div>
+  <div class="sd-label">Tampilan</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px">
+    <span style="font-size:13px;font-weight:500;color:var(--text2)">Ukuran Teks</span>
+    <div id="font-scale-btn-inline" style="display:flex;align-items:center;gap:0;border:1.5px solid var(--border);border-radius:8px;overflow:hidden">
+      <button onclick="FontScale.decrease()" style="background:none;border:none;padding:5px 10px;font-size:13px;cursor:pointer;color:var(--text2);font-family:inherit;font-weight:700">A−</button>
+      <div style="width:1px;background:var(--border);height:18px"></div>
+      <span id="scale-label" style="font-size:11px;font-weight:700;color:var(--text3);padding:0 8px;min-width:34px;text-align:center">100%</span>
+      <div style="width:1px;background:var(--border);height:18px"></div>
+      <button onclick="FontScale.increase()" style="background:none;border:none;padding:5px 10px;font-size:13px;cursor:pointer;color:var(--text2);font-family:inherit;font-weight:700">A+</button>
+    </div>
+  </div>
 </div>
 
 <button id="presenter-btn" onclick="Presenter.toggle()">PRESENTER</button>
@@ -77,12 +99,10 @@
     </div>
     <div class="cover-content" style="width:100%;display:flex;flex-direction:column;align-items:center">
 
-    <!-- EDIT SINI: ganti dengan <img src="icons/logo-bni.png" style="height:44px;margin-bottom:6px"/> -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-      <div style="width:44px;height:44px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:white;letter-spacing:-1px">BNI</div>
-      <div style="text-align:left">
-        <div style="font-size:16px;font-weight:900;color:white">BNI</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.3px">PT Bank Negara Indonesia (Persero) Tbk</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;background:white;padding:8px 14px;border-radius:10px">
+      <img src="icons/logo-bni.png" alt="BNI" style="height:32px;width:auto;object-fit:contain;display:block"/>
+      <div style="text-align:left;border-left:1px solid var(--border);padding-left:10px">
+        <div style="font-size:10px;color:var(--text3);letter-spacing:.3px;line-height:1.3">PT Bank Negara<br/>Indonesia (Persero) Tbk</div>
       </div>
     </div>
 
@@ -444,9 +464,9 @@
         <div class="ccard">
           <h4>💼 KMK Rekening Koran</h4>
           <div style="background:var(--orange-bg);border:1.5px solid rgba(232,70,26,.2);border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:11px;color:var(--text2);line-height:1.5">ℹ️ Bayar <strong>bunga dari saldo yang ditarik</strong> — bukan dari plafond penuh.</div>
-          <div class="fg"><label class="fl">Plafond Fasilitas (Rp)</label><input type="number" class="fi" id="rk-plafond" value="1000000000"/></div>
-          <div class="fg"><label class="fl">Saldo yang Ditarik (Rp)</label><input type="number" class="fi" id="rk-tarik" value="500000000"/></div>
-          <div class="fg"><label class="fl">Suku Bunga/Tahun: <strong id="rk-rv" style="color:var(--orange)">10</strong>%</label><input type="range" class="fr" id="rk-r" min="7" max="18" step="0.5" value="10" oninput="document.getElementById('rk-rv').textContent=this.value"/><div class="rl"><span>7%</span><span>18%</span></div></div>
+          <div class="fg"><label class="fl">Plafond Fasilitas (Rp)</label><input type="text" inputmode="numeric" class="fi fi-rupiah" id="rk-plafond" value="1.000.000.000"/></div>
+          <div class="fg"><label class="fl">Saldo yang Ditarik (Rp)</label><input type="text" inputmode="numeric" class="fi fi-rupiah" id="rk-tarik" value="500.000.000"/></div>
+          <div class="fg"><label class="fl">Suku Bunga/Tahun (%)</label><input type="number" class="fi" id="rk-r" min="0" max="100" step="0.1" value="10"/></div>
           <button class="btn btn-o btn-full" onclick="calcRK()">Hitung Bunga</button>
         </div>
         <div class="rarea">
@@ -468,10 +488,10 @@
       <div class="calc-shell">
         <div class="ccard">
           <h4>📊 KMK Termloan / Kredit Investasi</h4>
-          <div class="fg"><label class="fl">Jumlah Pinjaman (Rp)</label><input type="number" class="fi" id="kmk-a" value="500000000"/></div>
-          <div class="fg"><label class="fl">Suku Bunga/Tahun: <strong id="kmk-rv" style="color:var(--orange)">10</strong>%</label><input type="range" class="fr" id="kmk-r" min="7" max="18" step="0.5" value="10" oninput="document.getElementById('kmk-rv').textContent=this.value"/><div class="rl"><span>7%</span><span>18%</span></div></div>
-          <div class="fg"><label class="fl">Tenor: <strong id="kmk-tv" style="color:var(--orange)">36</strong> bulan</label><input type="range" class="fr" id="kmk-t" min="1" max="120" value="36" oninput="document.getElementById('kmk-tv').textContent=this.value"/><div class="rl"><span>1 bln</span><span>120 bln</span></div></div>
-          <div class="fg"><label class="fl">Grace Period: <strong id="kmk-gv" style="color:var(--orange)">0</strong> bulan</label><input type="range" class="fr" id="kmk-g" min="0" max="24" step="3" value="0" oninput="document.getElementById('kmk-gv').textContent=this.value"/><div class="rl"><span>0</span><span>24 bln</span></div></div>
+          <div class="fg"><label class="fl">Jumlah Pinjaman (Rp)</label><input type="text" inputmode="numeric" class="fi fi-rupiah" id="kmk-a" value="500.000.000"/></div>
+          <div class="fg"><label class="fl">Suku Bunga/Tahun (%)</label><input type="number" class="fi" id="kmk-r" min="0" max="100" step="0.1" value="10"/></div>
+          <div class="fg"><label class="fl">Tenor (bulan)</label><input type="number" class="fi" id="kmk-t" min="1" max="360" value="36"/></div>
+          <div class="fg"><label class="fl">Grace Period (bulan)</label><input type="number" class="fi" id="kmk-g" min="0" max="60" value="0"/></div>
           <button class="btn btn-o btn-full" onclick="calcKMK()">Hitung Angsuran</button>
         </div>
         <div class="rarea">
@@ -493,10 +513,10 @@
       <div class="calc-shell">
         <div class="ccard">
           <h4>🔗 SCF / SPAN</h4>
-          <div class="fg"><label class="fl">Nilai Kontrak / Invoice (Rp)</label><input type="number" class="fi" id="scf-a" value="2000000000"/></div>
-          <div class="fg"><label class="fl">% Pembiayaan: <strong id="scf-pv" style="color:var(--orange)">80</strong>%</label><input type="range" class="fr" id="scf-p" min="60" max="95" step="5" value="80" oninput="document.getElementById('scf-pv').textContent=this.value"/><div class="rl"><span>60%</span><span>95%</span></div></div>
-          <div class="fg"><label class="fl">Suku Bunga/Tahun: <strong id="scf-rv" style="color:var(--orange)">9</strong>%</label><input type="range" class="fr" id="scf-r" min="6" max="16" step="0.5" value="9" oninput="document.getElementById('scf-rv').textContent=this.value"/><div class="rl"><span>6%</span><span>16%</span></div></div>
-          <div class="fg"><label class="fl">Tenor: <strong id="scf-tv" style="color:var(--orange)">90</strong> hari</label><input type="range" class="fr" id="scf-t" min="30" max="365" step="30" value="90" oninput="document.getElementById('scf-tv').textContent=this.value"/><div class="rl"><span>30hr</span><span>365hr</span></div></div>
+          <div class="fg"><label class="fl">Nilai Kontrak / Invoice (Rp)</label><input type="text" inputmode="numeric" class="fi fi-rupiah" id="scf-a" value="2.000.000.000"/></div>
+          <div class="fg"><label class="fl">% Pembiayaan</label><input type="number" class="fi" id="scf-p" min="0" max="100" step="1" value="80"/></div>
+          <div class="fg"><label class="fl">Suku Bunga/Tahun (%)</label><input type="number" class="fi" id="scf-r" min="0" max="100" step="0.1" value="9"/></div>
+          <div class="fg"><label class="fl">Tenor (hari)</label><input type="number" class="fi" id="scf-t" min="1" max="730" value="90"/></div>
           <button class="btn btn-o btn-full" onclick="calcSCF()">Hitung</button>
         </div>
         <div class="rarea">
@@ -518,7 +538,7 @@
       <div class="calc-shell">
         <div class="ccard">
           <h4>🛡️ Bank Garansi</h4>
-          <div class="fg"><label class="fl">Nilai Bank Garansi (Rp)</label><input type="number" class="fi" id="bg-a" value="1500000000"/></div>
+          <div class="fg"><label class="fl">Nilai Bank Garansi (Rp)</label><input type="text" inputmode="numeric" class="fi fi-rupiah" id="bg-a" value="1.500.000.000"/></div>
           <div class="fg"><label class="fl">Jenis GB</label>
             <select class="fi" id="bg-type" onchange="updateMD()">
               <option value="0,1.5">Bid Bond (Tender) — MD 0%</option>
@@ -527,8 +547,8 @@
               <option value="5,2.0">Maintenance Bond — MD 5%</option>
             </select>
           </div>
-          <div class="fg"><label class="fl">Propisi p.a.: <strong id="bg-prv" style="color:var(--orange)">2.0</strong>% <span style="font-weight:400;color:var(--text3)">(negotiable)</span></label><input type="range" class="fr" id="bg-pr" min="1" max="3" step="0.25" value="2.0" oninput="document.getElementById('bg-prv').textContent=this.value"/><div class="rl"><span>1%</span><span>3%</span></div></div>
-          <div class="fg"><label class="fl">Jangka Waktu: <strong id="bg-tv" style="color:var(--orange)">6</strong> bulan</label><input type="range" class="fr" id="bg-t" min="1" max="24" value="6" oninput="document.getElementById('bg-tv').textContent=this.value"/><div class="rl"><span>1 bln</span><span>24 bln</span></div></div>
+          <div class="fg"><label class="fl">Propisi p.a. (%) <span style="font-weight:400;color:var(--text3)">— negotiable</span></label><input type="number" class="fi" id="bg-pr" min="0" max="100" step="0.05" value="2.0"/></div>
+          <div class="fg"><label class="fl">Jangka Waktu (bulan)</label><input type="number" class="fi" id="bg-t" min="1" max="60" value="6"/></div>
           <button class="btn btn-t btn-full" onclick="calcBG()">Hitung Biaya GB</button>
         </div>
         <div class="rarea">
@@ -551,10 +571,10 @@
       <div class="calc-shell">
         <div class="ccard">
           <h4>🔒 Cash Collateral Credit</h4>
-          <div class="fg"><label class="fl">Nilai Deposito (Rp)</label><input type="number" class="fi" id="ccc-d" value="1000000000"/></div>
-          <div class="fg"><label class="fl">% Plafond dari Deposito: <strong id="ccc-pv" style="color:var(--orange)">90</strong>%</label><input type="range" class="fr" id="ccc-p" min="70" max="95" step="5" value="90" oninput="document.getElementById('ccc-pv').textContent=this.value"/><div class="rl"><span>70%</span><span>95%</span></div></div>
-          <div class="fg"><label class="fl">Bunga Kredit/Thn: <strong id="ccc-rv" style="color:var(--orange)">8</strong>%</label><input type="range" class="fr" id="ccc-r" min="5" max="14" step="0.5" value="8" oninput="document.getElementById('ccc-rv').textContent=this.value"/><div class="rl"><span>5%</span><span>14%</span></div></div>
-          <div class="fg"><label class="fl">Bunga Deposito/Thn: <strong id="ccc-drv" style="color:var(--orange)">5</strong>%</label><input type="range" class="fr" id="ccc-dr" min="3" max="8" step="0.25" value="5" oninput="document.getElementById('ccc-drv').textContent=this.value"/><div class="rl"><span>3%</span><span>8%</span></div></div>
+          <div class="fg"><label class="fl">Nilai Deposito (Rp)</label><input type="text" inputmode="numeric" class="fi fi-rupiah" id="ccc-d" value="1.000.000.000"/></div>
+          <div class="fg"><label class="fl">% Plafond dari Deposito</label><input type="number" class="fi" id="ccc-p" min="0" max="100" step="1" value="90"/></div>
+          <div class="fg"><label class="fl">Bunga Kredit/Tahun (%)</label><input type="number" class="fi" id="ccc-r" min="0" max="100" step="0.1" value="8"/></div>
+          <div class="fg"><label class="fl">Bunga Deposito/Tahun (%)</label><input type="number" class="fi" id="ccc-dr" min="0" max="100" step="0.05" value="5"/></div>
           <button class="btn btn-o btn-full" onclick="calcCCC()">Hitung</button>
         </div>
         <div class="rarea">
@@ -590,30 +610,26 @@
 
         <div class="fg">
           <label class="fl">Omzet / Penjualan per Bulan (Rp)</label>
-          <input type="number" class="fi" id="wc-sales" value="500000000" placeholder="500000000"/>
+          <input type="text" inputmode="numeric" class="fi fi-rupiah" id="wc-sales" value="500.000.000"/>
         </div>
         <div class="fg">
-          <label class="fl">Margin Keuntungan Kotor: <strong id="wc-mv" style="color:var(--orange)">30</strong>%</label>
-          <input type="range" class="fr" id="wc-margin" min="5" max="80" value="30" oninput="document.getElementById('wc-mv').textContent=this.value"/>
-          <div class="rl"><span>5%</span><span>80%</span></div>
+          <label class="fl">Margin Keuntungan Kotor (%)</label>
+          <input type="number" class="fi" id="wc-margin" min="0" max="100" step="1" value="30"/>
         </div>
 
         <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin:12px 0 8px">Siklus Kas (hari rata-rata)</div>
 
         <div class="fg">
-          <label class="fl">📦 Hari Stok / Inventory: <strong id="wc-iv" style="color:var(--orange)">30</strong> hari</label>
-          <input type="range" class="fr" id="wc-inv" min="0" max="120" value="30" oninput="document.getElementById('wc-iv').textContent=this.value"/>
-          <div class="rl"><span>0</span><span>120 hari</span></div>
+          <label class="fl">📦 Hari Stok / Inventory</label>
+          <input type="number" class="fi" id="wc-inv" min="0" max="365" value="30"/>
         </div>
         <div class="fg">
-          <label class="fl">📋 Hari Piutang / Receivable: <strong id="wc-rv2" style="color:var(--orange)">45</strong> hari</label>
-          <input type="range" class="fr" id="wc-rec" min="0" max="120" value="45" oninput="document.getElementById('wc-rv2').textContent=this.value"/>
-          <div class="rl"><span>0</span><span>120 hari</span></div>
+          <label class="fl">📋 Hari Piutang / Receivable</label>
+          <input type="number" class="fi" id="wc-rec" min="0" max="365" value="45"/>
         </div>
         <div class="fg">
-          <label class="fl">🏦 Hari Hutang / Payable: <strong id="wc-pv" style="color:var(--green)">15</strong> hari</label>
-          <input type="range" class="fr" id="wc-pay" min="0" max="90" value="15" oninput="document.getElementById('wc-pv').textContent=this.value"/>
-          <div class="rl"><span>0</span><span>90 hari</span></div>
+          <label class="fl">🏦 Hari Hutang / Payable</label>
+          <input type="number" class="fi" id="wc-pay" min="0" max="365" value="15"/>
         </div>
 
         <button class="btn btn-o btn-full" onclick="calcWC()">Hitung Kebutuhan Modal</button>
@@ -706,6 +722,7 @@
 <script src="js/config.js"></script>
 <script src="js/deck.js"></script>
 <script src="js/calc.js"></script>
+<script src="js/meeting.js"></script>
 <script src="js/share.js"></script>
 <script>
 // ── BOOT ──
@@ -716,6 +733,9 @@
   Deck.init();
   Menu.init();
   FontScale.buildUI();  // font size control A− / A+
+  SimHistory.renderBadge(); // show count if history exists from earlier session
+  Session.checkOnBoot();    // ask "continue or new client?" if leftover data exists
+  initRupiahInputs();       // live dot-separator formatting on Rupiah fields
 
   // Wire cover inputs → live sync to footers + closing slide
   ['inp-name','inp-phone','inp-branch','inp-wilayah'].forEach(id => {

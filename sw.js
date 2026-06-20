@@ -4,7 +4,7 @@
    Old caches are auto-deleted on activate.
    ============================================ */
 
-const CACHE_VERSION = 'bni-proposal-v1.4.0';
+const CACHE_VERSION = 'bni-proposal-v1.7.0';
 const ASSETS = [
   './',
   './index.html',
@@ -18,6 +18,7 @@ const ASSETS = [
   './js/deck.js',
   './js/config.js',
   './js/calc.js',
+  './js/meeting.js',
   './js/share.js',
   'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap',
 ];

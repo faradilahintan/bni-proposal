@@ -77,6 +77,8 @@ const Deck = (() => {
       LazyImages.loadForSlide(cur);
       LazyImages.loadForSlide(cur + 1);
     }
+    // track slide visit for meeting summary
+    if (typeof Meeting !== 'undefined') Meeting.trackSlide(cur);
   }
 
   function buildDots() {
@@ -329,23 +331,12 @@ const FontScale = (() => {
   }
 
   function buildUI() {
-    // Restore saved preference
+    // Controls now live inside the menu drawer (HTML, see index.html).
+    // This just restores saved preference and syncs the label.
     try {
       const saved = localStorage.getItem(KEY);
       if (saved !== null) idx = Math.min(Math.max(parseInt(saved), 0), STEPS.length - 1);
     } catch(e) {}
-
-    const wrap = document.createElement('div');
-    wrap.id = 'font-scale-btn';
-    wrap.setAttribute('title', 'Ukuran Teks');
-    wrap.innerHTML = `
-      <button onclick="FontScale.decrease()" aria-label="Perkecil teks">A−</button>
-      <div class="scale-sep"></div>
-      <span class="scale-label" id="scale-label">${LABELS[idx]}</span>
-      <div class="scale-sep"></div>
-      <button onclick="FontScale.increase()" aria-label="Perbesar teks">A+</button>
-    `;
-    document.body.appendChild(wrap);
     apply();
   }
 

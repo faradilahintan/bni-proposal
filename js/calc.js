@@ -34,6 +34,206 @@ function setVal(id, val) {
   if (el) el.textContent = val;
 }
 
+/* ============================================
+   RUPIAH INPUT LIVE FORMATTING
+   Inputs with class "fi-rupiah" auto-format with
+   dot thousand-separators while typing (e.g.
+   "1000000" → "1.000.000"). Calculation functions
+   should read these via getNum(id), which strips
+   the dots back out before parsing to a number.
+   ============================================ */
+
+// Reads a (possibly dot-formatted) input's value as a clean number.
+// Use this instead of +document.getElementById(id).value for any
+// field with class "fi-rupiah".
+function getNum(id) {
+  const el = document.getElementById(id);
+  if (!el) return 0;
+  const raw = el.value.replace(/\./g, '').replace(/[^\d]/g, '');
+  return raw ? parseInt(raw, 10) : 0;
+}
+
+function formatRupiahInput(el) {
+  // Strip everything except digits, then re-insert dots every 3 digits
+  const digits = el.value.replace(/[^\d]/g, '');
+  if (!digits) { el.value = ''; return; }
+  el.value = parseInt(digits, 10).toLocaleString('id-ID');
+}
+
+function initRupiahInputs() {
+  document.querySelectorAll('.fi-rupiah').forEach(el => {
+    // Format on every keystroke
+    el.addEventListener('input', () => {
+      const cursorWasAtEnd = el.selectionStart === el.value.length;
+      formatRupiahInput(el);
+      if (cursorWasAtEnd) {
+        el.selectionStart = el.selectionEnd = el.value.length;
+      }
+    });
+    // Normalize initial value on load (in case HTML had raw digits)
+    formatRupiahInput(el);
+  });
+}
+
+/* ============================================
+   SIM HISTORY — Tracks every calculation made
+   during the session. Persisted to localStorage
+   so it survives accidental refresh.
+   Used by: history panel (this file) + meeting
+   summary (meeting.js) + PDF export (share.js).
+   ============================================ */
+const SimHistory = (() => {
+  const KEY = 'bni-sim-history';
+  let items = [];
+
+  function load() {
+    try {
+      const saved = localStorage.getItem(KEY);
+      items = saved ? JSON.parse(saved) : [];
+    } catch(e) { items = []; }
+  }
+
+  function persist() {
+    try { localStorage.setItem(KEY, JSON.stringify(items)); } catch(e) {}
+  }
+
+  // label: human readable product name, e.g. "KMK Rekening Koran"
+  // rows: array of {label, value} — the result lines shown to the user
+  function log(label, rows) {
+    items.unshift({
+      id: Date.now(),
+      label,
+      rows,
+      time: new Date().toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' }),
+    });
+    // Cap at 30 entries so localStorage doesn't bloat
+    if (items.length > 30) items = items.slice(0, 30);
+    persist();
+    renderBadge();
+  }
+
+  function removeItem(id) {
+    items = items.filter(i => i.id !== id);
+    persist();
+    renderPanel();
+    renderBadge();
+  }
+
+  function clearAll() {
+    items = [];
+    persist();
+    renderPanel();
+    renderBadge();
+  }
+
+  function getAll() { return items; }
+
+  function renderBadge() {
+    const badge = document.getElementById('sim-history-badge');
+    if (!badge) return;
+    if (items.length > 0) {
+      badge.textContent = items.length;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function openPanel() {
+    let panel = document.getElementById('sim-history-panel');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'sim-history-panel';
+      document.body.appendChild(panel);
+
+      const style = document.createElement('style');
+      style.textContent = `
+        #sim-history-panel {
+          display:none; position:fixed; inset:0; z-index:9998;
+          background:rgba(10,34,64,.4); backdrop-filter:blur(4px);
+          align-items:flex-end; justify-content:center;
+        }
+        #sim-history-panel.open { display:flex; }
+        #sim-history-inner {
+          background:white; border-radius:20px 20px 0 0;
+          padding:20px 20px 16px; width:100%; max-width:480px;
+          max-height:78vh; overflow-y:auto;
+          box-shadow:0 -8px 32px rgba(0,0,0,.15);
+          border-top:3px solid var(--orange);
+        }
+        .sh-item {
+          background:var(--bg2); border-radius:12px; padding:12px 14px;
+          margin-bottom:10px; position:relative;
+        }
+        .sh-item-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+        .sh-item-label { font-size:13px; font-weight:800; color:var(--navy); }
+        .sh-item-time { font-size:10px; color:var(--text3); margin-top:2px; }
+        .sh-item-del { background:none; border:none; color:var(--text3); cursor:pointer; font-size:13px; padding:2px 6px; }
+        .sh-item-del:hover { color:var(--orange); }
+        .sh-row { display:flex; justify-content:space-between; font-size:11px; padding:2px 0; }
+        .sh-row-label { color:var(--text3); }
+        .sh-row-val { color:var(--navy); font-weight:700; }
+      `;
+      document.head.appendChild(style);
+    }
+    renderPanel();
+    panel.classList.add('open');
+  }
+
+  function closePanel() {
+    document.getElementById('sim-history-panel')?.classList.remove('open');
+  }
+
+  function renderPanel() {
+    const panel = document.getElementById('sim-history-panel');
+    if (!panel) return;
+
+    const itemsHTML = items.length === 0
+      ? `<div style="text-align:center;padding:30px 14px;color:var(--text3);font-size:13px">
+           Belum ada simulasi yang dihitung.<br/>Hasil kalkulator akan otomatis tersimpan di sini.
+         </div>`
+      : items.map(item => `
+          <div class="sh-item">
+            <div class="sh-item-head">
+              <div>
+                <div class="sh-item-label">${item.label}</div>
+                <div class="sh-item-time">${item.time}</div>
+              </div>
+              <button class="sh-item-del" onclick="SimHistory.removeItem(${item.id})">✕</button>
+            </div>
+            ${item.rows.map(r => `
+              <div class="sh-row">
+                <span class="sh-row-label">${r.label}</span>
+                <span class="sh-row-val">${r.value}</span>
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+
+    panel.innerHTML = `
+      <div id="sim-history-inner">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:14px;font-weight:800;color:var(--navy)">📋 Riwayat Simulasi</span>
+          <button onclick="SimHistory.closePanel()" style="background:var(--bg2);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:var(--text2)">✕</button>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Semua hasil hitung selama sesi ini, tersimpan otomatis.</div>
+
+        ${itemsHTML}
+
+        ${items.length > 0 ? `
+          <button onclick="SimHistory.clearAll()" style="width:100%;margin-top:8px;padding:10px;border-radius:9px;border:1.5px solid var(--border);background:white;color:var(--text2);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">
+            Hapus Semua Riwayat
+          </button>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  load();
+
+  return { log, removeItem, clearAll, getAll, openPanel, closePanel, renderBadge };
+})();
+
 /* ── Tab switcher ── */
 const CalcTabs = (() => {
   const ORDER = ['rk', 'kmk', 'scf', 'bg', 'ccc', 'wc'];
@@ -54,8 +254,8 @@ const CalcTabs = (() => {
    Model: bunga dari saldo yang ditarik
    ───────────────────────────────────── */
 function calcRK() {
-  const plafond = +document.getElementById('rk-plafond').value || 0;
-  const tarik   = +document.getElementById('rk-tarik').value   || 0;
+  const plafond = getNum('rk-plafond');
+  const tarik   = getNum('rk-tarik');
   const rate    = +document.getElementById('rk-r').value;
 
   const rBulan  = rate / 100 / 12;
@@ -75,6 +275,13 @@ function calcRK() {
   if (effEl) effEl.classList.add('positive');
 
   showResult('rk');
+
+  SimHistory.log('KMK Rekening Koran', [
+    { label: 'Plafond', value: rp(plafond) },
+    { label: 'Saldo Ditarik', value: rp(tarik) },
+    { label: 'Bunga/Bulan', value: rp(bungaAktual) },
+    { label: 'Hemat vs Tarik Penuh', value: rp(hemat) + '/bln' },
+  ]);
 }
 
 /* ─────────────────────────────────────
@@ -82,7 +289,7 @@ function calcRK() {
    Model: anuitas
    ───────────────────────────────────── */
 function calcKMK() {
-  const p     = +document.getElementById('kmk-a').value || 0;
+  const p     = getNum('kmk-a');
   const rate  = +document.getElementById('kmk-r').value;
   const tenor = +document.getElementById('kmk-t').value;
   const grace = +document.getElementById('kmk-g').value;
@@ -99,6 +306,13 @@ function calcKMK() {
   setVal('kmk-i',   rp(totAfter + totGrace - p));
   setVal('kmk-tot', rp(totAfter + totGrace));
   showResult('kmk');
+
+  SimHistory.log('KMK Termloan / Kredit Investasi', [
+    { label: 'Jumlah Pinjaman', value: rp(p) },
+    { label: 'Tenor', value: tenor + ' bulan' },
+    { label: 'Angsuran/Bulan', value: rp(monthly) },
+    { label: 'Total Pembayaran', value: rp(totAfter + totGrace) },
+  ]);
 }
 
 /* ─────────────────────────────────────
@@ -106,7 +320,7 @@ function calcKMK() {
    Model: flat interest on disbursed amount
    ───────────────────────────────────── */
 function calcSCF() {
-  const nilai  = +document.getElementById('scf-a').value || 0;
+  const nilai  = getNum('scf-a');
   const pctPem = +document.getElementById('scf-p').value / 100;
   const rate   = +document.getElementById('scf-r').value / 100;
   const hari   = +document.getElementById('scf-t').value;
@@ -124,6 +338,13 @@ function calcSCF() {
   if (netEl) netEl.className = 'r-val ' + (netProfit >= 0 ? 'positive' : 'negative');
 
   showResult('scf');
+
+  SimHistory.log('SCF / SPAN', [
+    { label: 'Nilai Kontrak', value: rp(nilai) },
+    { label: 'Dana Diterima', value: rp(disbursed) },
+    { label: 'Biaya Bunga', value: rp(cost) },
+    { label: 'Est. Laba Bersih', value: rp(netProfit) },
+  ]);
 }
 
 /* ─────────────────────────────────────
@@ -131,16 +352,16 @@ function calcSCF() {
    Model: MD blocked + propisi quarterly + admin
    ───────────────────────────────────── */
 function updateMD() {
+  // When user picks a GB type, auto-fill the suggested propisi rate
+  // into the (now plain number input) propisi field.
   const v = document.getElementById('bg-type')?.value.split(',');
   if (!v) return;
   const prInput = document.getElementById('bg-pr');
-  const prLabel = document.getElementById('bg-prv');
   if (prInput) prInput.value = v[1];
-  if (prLabel) prLabel.textContent = v[1];
 }
 
 function calcBG() {
-  const nilai    = +document.getElementById('bg-a').value || 0;
+  const nilai    = getNum('bg-a');
   const v        = document.getElementById('bg-type').value.split(',');
   const mdPct    = +v[0] / 100;
   const propisi  = +document.getElementById('bg-pr').value / 100;
@@ -157,6 +378,13 @@ function calcBG() {
   setVal('bg-tpr', rp(totalPr));
   setVal('bg-tot', rp(totalPr + adm));
   showResult('bg');
+
+  SimHistory.log('Bank Garansi', [
+    { label: 'Nilai BG', value: rp(nilai) },
+    { label: 'Marginal Deposit', value: rp(mdAmt) },
+    { label: 'Jangka Waktu', value: tenor + ' bulan' },
+    { label: 'Total Biaya', value: rp(totalPr + adm) },
+  ]);
 }
 
 /* ─────────────────────────────────────
@@ -164,7 +392,7 @@ function calcBG() {
    Model: net cost = kredit interest - deposito income
    ───────────────────────────────────── */
 function calcCCC() {
-  const dep    = +document.getElementById('ccc-d').value  || 0;
+  const dep    = getNum('ccc-d');
   const pctPl  = +document.getElementById('ccc-p').value  / 100;
   const rKredit= +document.getElementById('ccc-r').value  / 100 / 12;
   const rDep   = +document.getElementById('ccc-dr').value / 100 / 12;
@@ -183,6 +411,12 @@ function calcCCC() {
   if (netEl) netEl.className = 'r-val ' + (net <= pendDep ? 'positive' : '');
 
   showResult('ccc');
+
+  SimHistory.log('Cash Collateral Credit', [
+    { label: 'Nilai Deposito', value: rp(dep) },
+    { label: 'Plafond Kredit', value: rp(plafond) },
+    { label: 'Biaya Bersih/Bulan', value: rp(net) },
+  ]);
 }
 
 /* ─────────────────────────────────────
@@ -190,7 +424,7 @@ function calcCCC() {
    Model: Cash Conversion Cycle → Financing Gap
    ───────────────────────────────────── */
 function calcWC() {
-  const sales      = +document.getElementById('wc-sales').value    || 0;
+  const sales      = getNum('wc-sales');
   const margin     = +document.getElementById('wc-margin').value   || 0;
   const invDays    = +document.getElementById('wc-inv').value      || 0;
   const recDays    = +document.getElementById('wc-rec').value      || 0;
@@ -230,6 +464,13 @@ function calcWC() {
   if (recEl) recEl.parentElement.classList.add('hl');
 
   showResult('wc');
+
+  SimHistory.log('Working Capital Calculator', [
+    { label: 'Omzet/Bulan', value: rp(sales) },
+    { label: 'Cash Conversion Cycle', value: cashCycle + ' hari' },
+    { label: 'Gap Modal Kerja', value: rp(wcGap) },
+    { label: 'Rekomendasi Plafond', value: rp(wcSafe) },
+  ]);
 }
 
 function renderCycleBar(inv, rec, pay, total) {
@@ -257,3 +498,107 @@ function renderCycleBar(inv, rec, pay, total) {
     </div>
   `;
 }
+
+/* ============================================
+   SESSION — "Klien Baru" reset + auto-prompt
+   Clears SimHistory + visited-slide tracking
+   so data from a previous client doesn't bleed
+   into the next meeting on the same device.
+   ============================================ */
+const Session = (() => {
+  const PROMPT_SEEN_KEY = 'bni-session-prompt-seen';
+
+  // Full reset: simulation history + slides-discussed tracking.
+  // Does NOT touch RM name/phone/branch (cover inputs) — those
+  // stay since it's still the same RM presenting.
+  function resetForNewClient(skipConfirm = false) {
+    const doReset = () => {
+      SimHistory.clearAll();
+      if (typeof Meeting !== 'undefined') Meeting.resetVisited();
+      showResetToast();
+    };
+
+    if (skipConfirm) { doReset(); return; }
+
+    const hasData = SimHistory.getAll().length > 0;
+    if (!hasData) { doReset(); return; }
+
+    if (confirm('Mulai sesi klien baru?\n\nRiwayat simulasi dan rangkuman produk yang sudah dibahas akan dihapus. Info RM (nama, kontak) tidak terpengaruh.')) {
+      doReset();
+    }
+  }
+
+  function showResetToast() {
+    let toast = document.getElementById('share-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'share-toast';
+      toast.style.cssText = `
+        position:fixed; bottom:100px; left:50%; transform:translateX(-50%);
+        padding:10px 20px; border-radius:10px; font-size:13px; font-weight:600;
+        z-index:9999; white-space:nowrap; font-family:'Plus Jakarta Sans',sans-serif;
+      `;
+      document.body.appendChild(toast);
+    }
+    toast.textContent = '✅ Sesi baru dimulai — riwayat sebelumnya sudah dihapus';
+    toast.style.background = 'var(--navy)';
+    toast.style.color = 'white';
+    toast.style.opacity = '1';
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.style.display='none', 300); }, 3000);
+  }
+
+  // ── Auto-prompt on load ──
+  // If there's leftover history from a previous session, ask once
+  // per page-load whether to continue or start fresh.
+  function checkOnBoot() {
+    const hasData = SimHistory.getAll().length > 0;
+    if (!hasData) return;
+
+    showBootPrompt();
+  }
+
+  function showBootPrompt() {
+    const sims = SimHistory.getAll();
+    const lastTime = sims[0]?.time || '';
+
+    const overlay = document.createElement('div');
+    overlay.id = 'session-boot-prompt';
+    overlay.style.cssText = `
+      position:fixed; inset:0; z-index:10000;
+      background:rgba(10,34,64,.55); backdrop-filter:blur(6px);
+      display:flex; align-items:center; justify-content:center; padding:24px;
+    `;
+    overlay.innerHTML = `
+      <div style="background:white;border-radius:18px;padding:24px 22px;max-width:340px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.2)">
+        <div style="font-size:32px;margin-bottom:12px;text-align:center">👋</div>
+        <div style="font-size:15px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:8px">Ada Riwayat Tersimpan</div>
+        <div style="font-size:12px;color:var(--text2);text-align:center;line-height:1.6;margin-bottom:18px">
+          Ditemukan ${sims.length} simulasi dari sesi sebelumnya (${lastTime}).<br/>Apakah ini klien yang sama, atau klien baru?
+        </div>
+        <button onclick="Session.continueSession()" style="
+          width:100%;padding:12px;border-radius:10px;background:var(--navy);color:white;
+          border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;margin-bottom:8px">
+          Lanjutkan Sesi Ini
+        </button>
+        <button onclick="Session.startFreshFromPrompt()" style="
+          width:100%;padding:12px;border-radius:10px;background:var(--orange);color:white;
+          border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700">
+          🔄 Klien Baru — Mulai Bersih
+        </button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+  }
+
+  function continueSession() {
+    document.getElementById('session-boot-prompt')?.remove();
+  }
+
+  function startFreshFromPrompt() {
+    document.getElementById('session-boot-prompt')?.remove();
+    resetForNewClient(true); // skip confirm — already confirmed via prompt choice
+  }
+
+  return { resetForNewClient, checkOnBoot, continueSession, startFreshFromPrompt };
+})();

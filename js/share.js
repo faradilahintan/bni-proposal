@@ -72,45 +72,109 @@ const Share = (() => {
     };
   }
 
+  // ── Slide names for the picker UI ──
+  // Keep in sync with slide order in index.html
+  const SLIDE_NAMES = [
+    'Cover',
+    'Ekosistem Produk',
+    'KMK Rekening Koran',
+    'KMK Plafond & Termloan',
+    'Kredit Investasi',
+    'SCF & SPAN',
+    'Bank Garansi',
+    'Plafond GB & Syarat',
+    'Trade Service',
+    'BNI Direct',
+    'Payroll',
+    'Kalkulator Kredit',
+    'Working Capital Calculator',
+    'Penutup',
+  ];
+
   // ── PDF Export ──
-  async function exportPDF() {
+  // Fixed: capture at a CONSISTENT slide aspect ratio (not raw device
+  // viewport) so portrait phones don't stretch/squeeze into landscape A4.
+  // selectedIndices: array of slide indices to export. If omitted/null,
+  // exports all slides.
+  async function exportPDF(selectedIndices = null) {
     const ok = await ensureLibraries();
     if (!ok) return;
 
-    const slides = document.querySelectorAll('.slide');
-    const total  = slides.length;
+    const allSlides = document.querySelectorAll('.slide');
+    const indices = selectedIndices && selectedIndices.length
+      ? selectedIndices
+      : Array.from(allSlides).map((_, i) => i);
+
+    if (indices.length === 0) {
+      showStatus('Pilih minimal 1 slide untuk diekspor.', true);
+      return;
+    }
+
+    const total  = indices.length;
     const { jsPDF } = window.jspdf;
+
+    // FIXED capture box — always the same regardless of phone/tablet/
+    // laptop screen size. This guarantees the PDF always comes out
+    // landscape like the original desktop design, no matter where
+    // the export button is tapped from.
+    const captureW = 1280;
+    const captureH = 720;
+    const ratio    = captureW / captureH;
 
     // A4 landscape in mm
     const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-    const W = pdf.internal.pageSize.getWidth();   // 297mm
-    const H = pdf.internal.pageSize.getHeight();  // 210mm
+    const pageW = pdf.internal.pageSize.getWidth();   // 297mm
+    const pageH = pdf.internal.pageSize.getHeight();  // 210mm
+
+    // Fit the captured image INSIDE the page, preserving aspect ratio,
+    // centered with a small margin — this is what prevents the squeeze.
+    const margin = 6; // mm
+    const maxW = pageW - margin * 2;
+    const maxH = pageH - margin * 2;
+
+    let drawW = maxW;
+    let drawH = drawW / ratio;
+    if (drawH > maxH) {
+      drawH = maxH;
+      drawW = drawH * ratio;
+    }
+    const offsetX = (pageW - drawW) / 2;
+    const offsetY = (pageH - drawH) / 2;
 
     // Save current state
     const currentActive = document.querySelector('.slide.active');
-    const currentIdx    = Array.from(slides).indexOf(currentActive);
+    const currentIdx    = Array.from(allSlides).indexOf(currentActive);
 
     showStatus(`Mengekspor slide 1 / ${total}...`);
 
-    for (let i = 0; i < total; i++) {
-      showStatus(`Mengekspor slide ${i + 1} / ${total}...`);
+    for (let n = 0; n < indices.length; n++) {
+      const i = indices[n];
+      showStatus(`Mengekspor slide ${n + 1} / ${total}...`);
 
-      // Temporarily make slide visible for capture
-      const slide = slides[i];
+      const slide = allSlides[i];
+      if (!slide) continue;
       const wasActive = slide.classList.contains('active');
 
-      // Force visible for capture without triggering deck transitions
-      slide.style.cssText = 'position:absolute;inset:0;opacity:1;transform:none;pointer-events:none;z-index:-1';
+      // Force slide to render at the SAME fixed box size for every
+      // capture — this is the key fix. Without this, each device's
+      // viewport size leaks into the captured image's aspect ratio.
+      slide.style.cssText = `
+        position:absolute; top:0; left:0;
+        width:${captureW}px; height:${captureH}px;
+        opacity:1; transform:none; pointer-events:none; z-index:-1;
+      `;
 
       try {
         const canvas = await html2canvas(slide, {
-          scale: 1.5,
+          scale: 2,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
           logging: false,
-          width:  window.innerWidth,
-          height: window.innerHeight,
+          width:  captureW,
+          height: captureH,
+          windowWidth:  captureW,
+          windowHeight: captureH,
           ignoreElements: el =>
             el.id === 'progress-bar'   ||
             el.id === 'nav-dots'       ||
@@ -121,16 +185,22 @@ const Share = (() => {
             el.id === 'presenter-bar'  ||
             el.id === 'swipe-hint'     ||
             el.id === 'share-panel'    ||
+            el.id === 'pdf-picker'     ||
+            el.id === 'sim-history-panel' ||
+            el.id === 'meeting-panel'  ||
+            el.id === 'session-boot-prompt' ||
             el.id === 'share-toast'    ||
             el.id === 'install-banner' ||
             el.id === 'update-banner'  ||
+            el.id === 'font-scale-btn' ||
             el.id === 'section-drawer',
         });
 
         const imgData = canvas.toDataURL('image/jpeg', 0.88);
 
-        if (i > 0) pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, 0, W, H);
+        if (n > 0) pdf.addPage();
+        // Draw centered, aspect-ratio preserved — no stretch
+        pdf.addImage(imgData, 'JPEG', offsetX, offsetY, drawW, drawH);
       } catch (err) {
         console.warn('Slide capture error:', err);
       }
@@ -143,17 +213,126 @@ const Share = (() => {
     }
 
     // Restore active slide
-    slides[currentIdx]?.classList.add('active');
+    allSlides[currentIdx]?.classList.add('active');
 
     // Generate filename
     const rm      = getRMInfo();
     const date    = new Date().toISOString().slice(0,10);
-    const fname   = `BNI_Proposal_${rm.branch.replace(/\s+/g,'_')}_${date}.pdf`;
+    const suffix  = indices.length < allSlides.length ? '_Ringkas' : '';
+    const fname   = `BNI_Proposal_${rm.branch.replace(/\s+/g,'_')}${suffix}_${date}.pdf`;
 
     pdf.save(fname);
     showStatus('✅ PDF berhasil diunduh!');
 
     return fname;
+  }
+
+  // ── PDF Slide Picker UI ──
+  function openPdfPicker() {
+    // Close share panel first
+    document.getElementById('share-panel')?.classList.remove('open');
+
+    let picker = document.getElementById('pdf-picker');
+    if (picker) { picker.classList.add('open'); return; }
+
+    const total = document.querySelectorAll('.slide').length;
+
+    const itemsHTML = SLIDE_NAMES.map((name, i) => `
+      <label class="pdf-pick-item">
+        <input type="checkbox" class="pdf-pick-check" value="${i}" checked/>
+        <span class="pdf-pick-num">${i + 1}</span>
+        <span class="pdf-pick-name">${name}</span>
+      </label>
+    `).join('');
+
+    picker = document.createElement('div');
+    picker.id = 'pdf-picker';
+    picker.innerHTML = `
+      <div id="pdf-picker-inner">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:14px;font-weight:800;color:var(--navy)">Pilih Slide untuk PDF</span>
+          <button onclick="document.getElementById('pdf-picker').classList.remove('open')"
+            style="background:var(--bg2);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:var(--text2)">✕</button>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">${total} slide tersedia — semua terpilih secara default</div>
+
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <button onclick="Share.toggleAllPicker(true)" style="flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:white;font-size:11px;font-weight:700;color:var(--text2);cursor:pointer">Pilih Semua</button>
+          <button onclick="Share.toggleAllPicker(false)" style="flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:white;font-size:11px;font-weight:700;color:var(--text2);cursor:pointer">Kosongkan</button>
+        </div>
+
+        <div id="pdf-pick-list">${itemsHTML}</div>
+
+        <button onclick="Share.confirmExport()" style="
+          width:100%;margin-top:14px;padding:13px;border-radius:10px;
+          background:var(--orange);color:white;border:none;cursor:pointer;
+          font-family:inherit;font-size:14px;font-weight:800;">
+          📄 Ekspor PDF (<span id="pdf-pick-count">${total}</span> slide)
+        </button>
+      </div>
+    `;
+    document.body.appendChild(picker);
+
+    const style = document.createElement('style');
+    style.textContent = `
+      #pdf-picker {
+        display:none; position:fixed; inset:0; z-index:9998;
+        background:rgba(10,34,64,.4); backdrop-filter:blur(4px);
+        align-items:flex-end; justify-content:center;
+      }
+      #pdf-picker.open { display:flex; }
+      #pdf-picker-inner {
+        background:white; border-radius:20px 20px 0 0;
+        padding:20px 20px 16px; width:100%; max-width:480px;
+        max-height:78vh; overflow-y:auto;
+        box-shadow:0 -8px 32px rgba(0,0,0,.15);
+        border-top:3px solid var(--orange);
+        animation:slideUp .25s ease;
+      }
+      .pdf-pick-item {
+        display:flex; align-items:center; gap:10px;
+        padding:10px 8px; border-radius:8px; cursor:pointer;
+        transition:background .15s;
+      }
+      .pdf-pick-item:hover { background:var(--bg2); }
+      .pdf-pick-check { width:18px; height:18px; accent-color:var(--orange); cursor:pointer; flex-shrink:0; }
+      .pdf-pick-num {
+        width:22px; height:22px; border-radius:6px; background:var(--bg3);
+        color:var(--text3); font-size:11px; font-weight:800;
+        display:flex; align-items:center; justify-content:center; flex-shrink:0;
+      }
+      .pdf-pick-name { font-size:13px; font-weight:600; color:var(--navy); }
+    `;
+    document.head.appendChild(style);
+
+    // Update count on any checkbox change
+    picker.addEventListener('change', updatePickerCount);
+
+    setTimeout(() => picker.classList.add('open'), 10);
+  }
+
+  function updatePickerCount() {
+    const checked = document.querySelectorAll('.pdf-pick-check:checked').length;
+    const countEl = document.getElementById('pdf-pick-count');
+    if (countEl) countEl.textContent = checked;
+  }
+
+  function toggleAllPicker(checked) {
+    document.querySelectorAll('.pdf-pick-check').forEach(cb => cb.checked = checked);
+    updatePickerCount();
+  }
+
+  function confirmExport() {
+    const selected = Array.from(document.querySelectorAll('.pdf-pick-check:checked'))
+      .map(cb => parseInt(cb.value));
+
+    if (selected.length === 0) {
+      showStatus('Pilih minimal 1 slide.', true);
+      return;
+    }
+
+    document.getElementById('pdf-picker')?.classList.remove('open');
+    exportPDF(selected);
   }
 
   // ── WhatsApp Share ──
@@ -213,7 +392,7 @@ PT Bank Negara Indonesia (Persero) Tbk`
             style="background:var(--bg2);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:var(--text2)">✕</button>
         </div>
 
-        <button onclick="Share.exportPDF()" id="btn-pdf" style="
+        <button onclick="Share.openPdfPicker()" id="btn-pdf" style="
           width:100%;display:flex;align-items:center;gap:12px;
           padding:13px 16px;background:var(--navy);color:white;
           border:none;border-radius:10px;cursor:pointer;margin-bottom:10px;
@@ -221,7 +400,7 @@ PT Bank Negara Indonesia (Persero) Tbk`
           <span style="font-size:20px">📄</span>
           <div>
             <div>Download PDF</div>
-            <div style="font-size:11px;font-weight:400;opacity:.65;margin-top:1px">Ekspor semua slide sebagai PDF</div>
+            <div style="font-size:11px;font-weight:400;opacity:.65;margin-top:1px">Pilih slide & ekspor sebagai PDF</div>
           </div>
         </button>
 
@@ -240,12 +419,26 @@ PT Bank Negara Indonesia (Persero) Tbk`
         <button onclick="Share.shareEmail()" style="
           width:100%;display:flex;align-items:center;gap:12px;
           padding:13px 16px;background:var(--orange);color:white;
-          border:none;border-radius:10px;cursor:pointer;margin-bottom:14px;
+          border:none;border-radius:10px;cursor:pointer;margin-bottom:10px;
           font-family:inherit;font-size:13px;font-weight:700;text-align:left;transition:opacity .2s">
           <span style="font-size:20px">✉️</span>
           <div>
             <div>Kirim via Email</div>
             <div style="font-size:11px;font-weight:400;opacity:.85;margin-top:1px">Buka email client dengan draft siap kirim</div>
+          </div>
+        </button>
+
+        <div style="height:1px;background:var(--border);margin:4px 0 12px"></div>
+
+        <button onclick="document.getElementById('share-panel').classList.remove('open');Meeting.openPanel()" style="
+          width:100%;display:flex;align-items:center;gap:12px;
+          padding:13px 16px;background:var(--green);color:white;
+          border:none;border-radius:10px;cursor:pointer;margin-bottom:14px;
+          font-family:inherit;font-size:13px;font-weight:700;text-align:left;transition:opacity .2s">
+          <span style="font-size:20px">📝</span>
+          <div>
+            <div>Ringkasan Pertemuan</div>
+            <div style="font-size:11px;font-weight:400;opacity:.85;margin-top:1px">Rangkuman produk & simulasi yang sudah dibahas</div>
           </div>
         </button>
 
@@ -281,5 +474,5 @@ PT Bank Negara Indonesia (Persero) Tbk`
     setTimeout(() => panel.classList.add('open'), 10);
   }
 
-  return { openPanel, exportPDF, shareWhatsApp, shareEmail };
+  return { openPanel, exportPDF, shareWhatsApp, shareEmail, openPdfPicker, toggleAllPicker, confirmExport };
 })();

@@ -274,53 +274,10 @@
    elements proportionally without touching
    a single font-size declaration.
    Compliance bar stays fixed (outside #deck).
+   Controls now live inside the menu drawer
+   (see #section-drawer in index.html).
    ============================================ */
 #deck {
   transform-origin: top left;
-  /* zoom set dynamically by FontScale.set() */
-}
-
-#font-scale-btn {
-  position: fixed;
-  bottom: 40px;        /* above footer */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  background: white;
-  border: 1.5px solid var(--border);
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
-  overflow: hidden;
-  /* nudge left so it doesn't clash with counter */
-  margin-left: 60px;
-}
-
-#font-scale-btn button {
-  background: none;
-  border: none;
-  padding: 6px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  color: var(--text2);
-  font-family: inherit;
-  font-weight: 700;
-  line-height: 1;
-  transition: background .15s, color .15s;
-}
-#font-scale-btn button:hover { background: var(--orange-bg); color: var(--orange); }
-#font-scale-btn button:active { background: var(--orange); color: white; }
-
-#font-scale-btn .scale-sep {
-  width: 1px; background: var(--border);
-  height: 20px; flex-shrink: 0;
-}
-
-#font-scale-btn .scale-label {
-  font-size: 11px; font-weight: 700;
-  color: var(--text3); padding: 0 8px;
-  min-width: 36px; text-align: center;
-  user-select: none;
+  /* zoom set dynamically by FontScale.apply() */
 }

@@ -12,17 +12,19 @@ const Deck = (() => {
   const NOTES = [
     "Ketik nama & kontakmu dulu. Sebutkan nama klien, ucapkan terima kasih.",
     "Tanya dulu: 'Kebutuhan perbankan yang paling mendesak saat ini apa?'",
-    "Coba Working Capital Calculator dulu — tunjukkan GAP kebutuhan modal mereka.",
     "KMK RK = bayar BUNGA dari saldo yang ditarik, bukan angsuran penuh.",
     "Tanyakan: ada kontrak/SPK aktif? KMK Plafond sangat cocok.",
     "Tanya rencana investasi 2–3 tahun ke depan. Grace period cocok untuk konstruksi.",
     "Tanya: siapa buyer/principal utama? Atau ada proyek APBN/APBD?",
+    "Xpora cocok untuk UMKM yang sudah/mau ekspor. Tanya: apa produknya, sudah ada buyer luar negeri?",
+    "Fast Trex untuk UMKM yang SUDAH punya kontrak/PO ekspor. Highlight: plafond besar, agunan ringan, proses 5 hari kerja.",
     "Key point: jaminan aset tetap, MD rendah. Tanya: sering ikut tender?",
     "Highlight: cash collateral hanya 50% dari plafond GB — jauh lebih efisien!",
     "Tanya: ada transaksi ekspor/impor? BNI punya 8 overseas branches.",
     "Tanya: berapa transaksi transfer/payroll per bulan?",
     "Payroll = pintu masuk termudah. Hampir semua perusahaan butuh.",
     "MOMEN KRUSIAL — masukkan angka real klien. Efek ini lebih kuat dari brosur!",
+    "Coba Working Capital Calculator — tunjukkan GAP kebutuhan modal klien.",
     "Tutup: 'Dari yang kita bahas, solusi mana yang paling relevan?' Lalu DIAM.",
   ];
 
@@ -341,4 +343,71 @@ const FontScale = (() => {
   }
 
   return { buildUI, increase, decrease, reset };
+})();
+
+/* ============================================
+   HIGHLIGHT NOTES
+   Visible, editable annotation boxes that DO
+   get captured in PDF export — unlike presenter
+   notes which are hidden and excluded.
+   Persisted per-slide to localStorage so notes
+   survive navigation and reload.
+   ============================================ */
+const Highlight = (() => {
+  const STORAGE_KEY = 'bni-highlight-notes';
+  let notes = {};
+
+  function load() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      notes = saved ? JSON.parse(saved) : {};
+    } catch (e) { notes = {}; }
+  }
+
+  function persist() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(notes)); } catch (e) {}
+  }
+
+  // Auto-grow textarea height to fit content
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  // Called once on boot — wires up every .highlight-textarea found in HTML,
+  // restores saved text, and binds input listeners.
+  function init() {
+    load();
+    document.querySelectorAll('.highlight-textarea').forEach(el => {
+      const key = el.dataset.highlightKey;
+      if (key && notes[key]) {
+        el.value = notes[key];
+      }
+      autoResize(el);
+      el.addEventListener('input', () => {
+        autoResize(el);
+        if (key) {
+          notes[key] = el.value;
+          persist();
+          updateEmptyState(el);
+        }
+      });
+      updateEmptyState(el);
+    });
+  }
+
+  function updateEmptyState(el) {
+    const wrap = el.closest('.highlight-wrap');
+    if (!wrap) return;
+    wrap.classList.toggle('is-empty', el.value.trim() === '');
+  }
+
+  // Toggle visibility of a highlight box (RM can hide if not relevant
+  // for this particular client without losing the saved text)
+  function toggle(key) {
+    const wrap = document.querySelector(`[data-highlight-wrap="${key}"]`);
+    if (wrap) wrap.classList.toggle('hidden');
+  }
+
+  return { init, toggle, autoResize };
 })();

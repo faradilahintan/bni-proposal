@@ -28,6 +28,8 @@ const Meeting = (() => {
     'KMK Plafond & Termloan',
     'Kredit Investasi',
     'SCF & SPAN',
+    'Xpora — Overview',
+    'Xpora — Fast Trex',
     'Bank Garansi',
     'Plafond GB & Syarat',
     'Trade Service',
@@ -39,7 +41,7 @@ const Meeting = (() => {
   ];
 
   // Slides that represent actual "products" (skip Cover, Ekosistem, Kalkulator, Penutup)
-  const PRODUCT_SLIDE_INDICES = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const PRODUCT_SLIDE_INDICES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   function getRMInfo() {
     return {

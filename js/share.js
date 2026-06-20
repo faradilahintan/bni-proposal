@@ -81,6 +81,8 @@ const Share = (() => {
     'KMK Plafond & Termloan',
     'Kredit Investasi',
     'SCF & SPAN',
+    'Xpora — Overview',
+    'Xpora — Fast Trex',
     'Bank Garansi',
     'Plafond GB & Syarat',
     'Trade Service',
@@ -109,6 +111,19 @@ const Share = (() => {
       showStatus('Pilih minimal 1 slide untuk diekspor.', true);
       return;
     }
+
+    // Hide empty highlight boxes during capture so blank placeholder
+    // text/borders don't show up in the client-facing PDF. Boxes the
+    // RM actually filled in stay fully visible — that's the whole
+    // point of this feature.
+    const hiddenForCapture = [];
+    document.querySelectorAll('.highlight-wrap').forEach(wrap => {
+      const ta = wrap.querySelector('.highlight-textarea');
+      if (ta && ta.value.trim() === '' && !wrap.classList.contains('hidden')) {
+        wrap.classList.add('hidden');
+        hiddenForCapture.push(wrap);
+      }
+    });
 
     const total  = indices.length;
     const { jsPDF } = window.jspdf;
@@ -214,6 +229,9 @@ const Share = (() => {
 
     // Restore active slide
     allSlides[currentIdx]?.classList.add('active');
+
+    // Restore visibility of empty highlight boxes we temporarily hid
+    hiddenForCapture.forEach(wrap => wrap.classList.remove('hidden'));
 
     // Generate filename
     const rm      = getRMInfo();

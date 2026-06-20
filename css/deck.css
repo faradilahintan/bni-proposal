@@ -281,3 +281,76 @@
   transform-origin: top left;
   /* zoom set dynamically by FontScale.apply() */
 }
+
+/* ============================================
+   HIGHLIGHT NOTE — visible annotation box
+   Unlike presenter notes (data-note, hidden),
+   this IS visible to the client and IS captured
+   in PDF export. RM types directly into the
+   textarea while presenting.
+   ============================================ */
+.highlight-wrap {
+  margin: 14px 0;
+}
+.highlight-box {
+  background: var(--orange-bg);
+  border: 1.5px solid rgba(232,70,26,.3);
+  border-left: 4px solid var(--orange);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 14px;
+  position: relative;
+}
+.highlight-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--orange);
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.highlight-textarea {
+  width: 100%;
+  min-height: 22px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: var(--navy);
+  line-height: 1.6;
+  overflow: hidden;
+}
+.highlight-textarea::placeholder {
+  color: rgba(232,70,26,.45);
+  font-style: italic;
+}
+.highlight-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  background: white;
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  margin: 10px 0;
+  transition: all .2s;
+}
+.highlight-toggle-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  border-style: solid;
+}
+.highlight-wrap.hidden { display: none; }
+
+/* When printing/exporting to PDF, hide the empty-state placeholder
+   styling cues (dashed border) so it doesn't look unfinished if RM
+   forgot to fill it — empty boxes auto-hide during capture instead. */
+.highlight-wrap.pdf-capturing.is-empty { display: none !important; }

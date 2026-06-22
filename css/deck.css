@@ -221,23 +221,31 @@
   width: 100%;
 }
 
-/* ── Stock image slots ── */
+/* ── Stock image slots ──
+   NOTE: uses background-image (not <img object-fit>) because
+   html2canvas — used for PDF export — renders background-size:cover
+   far more reliably than object-fit on <img> tags, which often
+   stretches/distorts in the captured canvas. The actual <img> tag
+   is kept invisible (opacity:0, height:0) purely so our existing
+   LazyImages loader can detect load/error events; the visible
+   image is the background-image set by JS once loaded. */
 .img-accent {
   width: 100%;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  background: var(--bg3); /* fallback if offline */
+  background-color: var(--bg3); /* fallback if offline */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   flex-shrink: 0;
 }
 .img-accent img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
+  position: absolute;
+  width: 1px; height: 1px;
   opacity: 0;
-  transition: opacity .4s ease;
+  pointer-events: none;
 }
-.img-accent img.loaded { opacity: 1; }
 .img-accent .img-fallback {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -248,16 +256,31 @@
 .cover-img-bg {
   position: absolute; inset: 0; z-index: 0;
   overflow: hidden;
+  background: var(--navy); /* visible immediately, before/if image fails */
 }
 .cover-img-bg img {
   width: 100%; height: 100%;
   object-fit: cover;
+  object-position: center;
   opacity: 0;
   transition: opacity .6s ease;
-  filter: brightness(.35) saturate(.8);
+  /* NOTE: do NOT use CSS filter here — html2canvas (used for PDF
+     export) does not reliably render filter:brightness/saturate.
+     Darkening is done via .cover-img-overlay below instead, which
+     is a real DOM element and always captures correctly. */
+}
+/* Explicit dark overlay — replaces the old filter() darkening so
+   it survives PDF/html2canvas export. Sits above the image, below
+   the text content. */
+.cover-img-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg,
+    rgba(10,34,64,.72) 0%,
+    rgba(10,34,64,.6) 40%,
+    rgba(10,34,64,.78) 100%);
 }
 .cover-img-bg img.loaded { opacity: 1; }
-.cover-content { position: relative; z-index: 1; }
+.cover-content { position: relative; z-index: 2; }
 
 /* half-image layout for ekosistem */
 .half-img-row {

@@ -132,8 +132,11 @@ const Share = (() => {
     // laptop screen size. This guarantees the PDF always comes out
     // landscape like the original desktop design, no matter where
     // the export button is tapped from.
+    // Height bumped to 1000px (was 720px) — some slides (e.g. KMK
+    // Rekening Koran with its full syarat list) have more content
+    // than fits in 720px and were getting clipped at the bottom.
     const captureW = 1280;
-    const captureH = 720;
+    const captureH = 1000;
     const ratio    = captureW / captureH;
 
     // A4 landscape in mm

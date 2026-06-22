@@ -16,8 +16,16 @@ const rp = n => {
 window.rpFormat = rp;
 const pct = n => n.toFixed(1) + '%';
 
+// Bank-day convention: 1 year = 360 days, 1 month = 31 days.
+// Monthly rate is derived from the daily rate (annual/360) × 31,
+// NOT simply annual/12 — this matches BNI's internal day-count basis.
+function monthlyRateFromAnnual(annualRatePct) {
+  const dailyRate = annualRatePct / 100 / 360;
+  return dailyRate * 31;
+}
+
 function annuity(principal, annualRate, months) {
-  const r = annualRate / 100 / 12;
+  const r = monthlyRateFromAnnual(annualRate);
   if (!r || !months) return 0;
   return principal * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1);
 }
@@ -258,8 +266,9 @@ function calcRK() {
   const tarik   = getNum('rk-tarik');
   const rate    = +document.getElementById('rk-r').value;
 
-  const rBulan  = rate / 100 / 12;
-  const rHarian = rate / 100 / 365;
+  // Bank-day convention: harian = tahunan/360, bulanan = harian × 31
+  const rHarian = rate / 100 / 360;
+  const rBulan  = rHarian * 31;
 
   const bungaAktual = tarik   * rBulan;
   const bungaPenuh  = plafond * rBulan;
@@ -294,7 +303,7 @@ function calcKMK() {
   const tenor = +document.getElementById('kmk-t').value;
   const grace = +document.getElementById('kmk-g').value;
 
-  const rBulan   = rate / 100 / 12;
+  const rBulan   = monthlyRateFromAnnual(rate);
   const gracePay = p * rBulan;
   const months   = tenor - grace;
   const monthly  = annuity(p, rate, months);
@@ -326,7 +335,8 @@ function calcSCF() {
   const hari   = +document.getElementById('scf-t').value;
 
   const disbursed = nilai * pctPem;
-  const cost      = disbursed * rate * (hari / 365);
+  // Bank-day convention: 1 year = 360 days
+  const cost      = disbursed * rate * (hari / 360);
   const netProfit = nilai * 0.15 - cost; // asumsi margin proyek 15%
 
   setVal('scf-d', rp(disbursed));
@@ -394,8 +404,8 @@ function calcBG() {
 function calcCCC() {
   const dep    = getNum('ccc-d');
   const pctPl  = +document.getElementById('ccc-p').value  / 100;
-  const rKredit= +document.getElementById('ccc-r').value  / 100 / 12;
-  const rDep   = +document.getElementById('ccc-dr').value / 100 / 12;
+  const rKredit= monthlyRateFromAnnual(+document.getElementById('ccc-r').value);
+  const rDep   = monthlyRateFromAnnual(+document.getElementById('ccc-dr').value);
 
   const plafond   = dep * pctPl;
   const bungaKred = plafond * rKredit;

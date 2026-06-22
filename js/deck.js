@@ -257,15 +257,28 @@ const LazyImages = (() => {
     const src = img.dataset.src;
     if (!src) return;
 
+    const container = img.closest('.img-accent, .cover-img-bg');
+    const isAccent = container && container.classList.contains('img-accent');
+
     const tempImg = new Image();
     tempImg.onload = () => {
-      img.src = src;
-      img.classList.add('loaded');
+      if (isAccent) {
+        // Use background-image — far more reliable than <img object-fit>
+        // when this slide is later captured by html2canvas for PDF export.
+        container.style.backgroundImage = `url("${src}")`;
+      } else {
+        // Cover slide background still uses a real <img> (covers the
+        // whole slide, object-fit works fine there since it's full-bleed
+        // and we no longer rely on filter() for darkening — see
+        // .cover-img-overlay instead).
+        img.src = src;
+        img.classList.add('loaded');
+      }
     };
     tempImg.onerror = () => {
       // offline fallback — hide img, show emoji fallback
       img.style.display = 'none';
-      const fallback = img.closest('.img-accent, .cover-img-bg')?.querySelector('.img-fallback');
+      const fallback = container?.querySelector('.img-fallback');
       if (fallback) fallback.style.display = 'flex';
     };
     tempImg.src = src;
